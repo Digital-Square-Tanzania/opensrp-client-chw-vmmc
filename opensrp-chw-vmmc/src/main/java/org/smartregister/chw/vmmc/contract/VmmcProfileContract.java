@@ -2,7 +2,6 @@ package org.smartregister.chw.vmmc.contract;
 
 import org.jetbrains.annotations.Nullable;
 import org.smartregister.chw.vmmc.domain.MemberObject;
-import org.smartregister.chw.vmmc.domain.Visit;
 import org.smartregister.domain.AlertStatus;
 
 import java.util.Date;
@@ -21,10 +20,6 @@ public interface VmmcProfileContract {
         void openFamilyDueServices();
 
         void showProgressBar(boolean status);
-
-        void recordAnc(MemberObject memberObject);
-
-        void recordPnc(MemberObject memberObject);
 
         void hideView();
 
@@ -62,11 +57,21 @@ public interface VmmcProfileContract {
 
         void refreshFamilyStatus(AlertStatus status);
 
-        void startVmmcServiceForm(String baseEntityId);
+        void startServiceForm();
 
-        void startVmmcNotifiableForm(String baseEntityId);
+        void startNotifiableForm();
 
-        void startVmmcFollowUp(String baseEntityId);
+        void startFollowUp();
+
+        void startProcedure();
+
+        void startDischarge();
+
+        void continueService();
+
+        void continueProcedure();
+
+        void continueDischarge();
 
     }
 }

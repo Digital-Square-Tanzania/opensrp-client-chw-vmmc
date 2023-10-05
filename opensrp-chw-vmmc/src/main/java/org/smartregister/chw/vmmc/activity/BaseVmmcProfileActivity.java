@@ -22,6 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.smartregister.chw.vmmc.R;
 import org.smartregister.chw.vmmc.VmmcLibrary;
 import org.smartregister.chw.vmmc.contract.VmmcProfileContract;
 import org.smartregister.chw.vmmc.custom_views.BaseVmmcFloatingMenu;
@@ -46,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
 
-public class BaseVmmcProfileActivity extends BaseProfileActivity implements VmmcProfileContract.View, VmmcProfileContract.InteractorCallBack {
+public abstract class BaseVmmcProfileActivity extends BaseProfileActivity implements VmmcProfileContract.View, VmmcProfileContract.InteractorCallBack {
     protected MemberObject memberObject;
     protected VmmcProfileContract.Presenter profilePresenter;
     protected CircleImageView imageView;
@@ -84,20 +85,6 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
     protected LinearLayout recordVisits;
     protected TextView textViewVisitDoneEdit;
     protected TextView textViewRecordAncNotDone;
-    protected String gentialExaminationValue;
-    protected String anyComplaintsValue;
-    protected String diagnosedValue;
-    protected String anyComplicationsPreviousSurgicalProcedureValue;
-    protected String symptomsHematologicalDiseaseValue;
-    protected String knownAllergiesValue;
-    protected String hivTestResultValue;
-    protected String viralLoad;
-    protected String typeForBloodGlucoseTest;
-    protected String bloodGlucoseTest;
-    protected String dischargeCondition;
-    protected String systolic;
-    protected String diastolic;
-    protected String mcConducted;
     protected String profileType;
     protected BaseVmmcFloatingMenu baseVmmcFloatingMenu;
     private TextView tvUpComingServices;
@@ -198,7 +185,6 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -214,50 +200,19 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
     @Override
     protected void setupViews() {
         initializeFloatingMenu();
-
-        recordAnc(memberObject);
-        recordPnc(memberObject);
         setupButtons();
     }
 
     protected void setupButtons() {
-
-        Visit serviceVisit = null;
-        Visit procedureVisit = null;
-        Visit dischargeVisit = null;
-        Visit followUpVisit = null;
-        Visit notifiableVisit = null;
-
-        gentialExaminationValue = VmmcDao.getGentialExamination(memberObject.getBaseEntityId());
-        diagnosedValue = VmmcDao.getDiagnosed(memberObject.getBaseEntityId());
-        anyComplicationsPreviousSurgicalProcedureValue = VmmcDao.getAnyComplicationsPreviousSurgicalProcedure(memberObject.getBaseEntityId());
-        hivTestResultValue = VmmcDao.getHivTestResult(memberObject.getBaseEntityId());
-        knownAllergiesValue = VmmcDao.getKnownAllergiesValue(memberObject.getBaseEntityId());
-        symptomsHematologicalDiseaseValue = VmmcDao.getSymptomsHematologicalDiseaseValue(memberObject.getBaseEntityId());
-        anyComplaintsValue = VmmcDao.getAnyComplaints(memberObject.getBaseEntityId());
-        viralLoad = VmmcDao.getViralLoad(memberObject.getBaseEntityId());
-        typeForBloodGlucoseTest = VmmcDao.getTypeForBloodGlucoseTest(memberObject.getBaseEntityId());
-        bloodGlucoseTest = VmmcDao.getBloodGlucoseTest(memberObject.getBaseEntityId());
-        mcConducted = VmmcDao.getMcConducted(memberObject.getBaseEntityId());
-        dischargeCondition = VmmcDao.getDischargeCondition(memberObject.getBaseEntityId());
-        systolic = VmmcDao.getSystolic(memberObject.getBaseEntityId());
-        diastolic = VmmcDao.getDiastolic(memberObject.getBaseEntityId());
-
         try {
-            serviceVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_SERVICES);
-            procedureVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_PROCEDURE);
-            dischargeVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_DISCHARGE);
-            followUpVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_FOLLOW_UP_VISIT);
-            notifiableVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_NOTIFIABLE_EVENTS);
 
-            if (serviceVisit != null) {
-                if (!serviceVisit.getProcessed() && VmmcVisitsUtil.getVmmcServiceVisitStatus(serviceVisit).equalsIgnoreCase(VmmcVisitsUtil.Complete)) {
+            if (getServiceVisit() != null) {
+                if (!getServiceVisit().getProcessed() && VmmcVisitsUtil.getVmmcServiceVisitStatus(getServiceVisit()).equalsIgnoreCase(VmmcVisitsUtil.Complete)) {
                     manualProcessVisit.setVisibility(View.VISIBLE);
                     textViewContinueVmmcService.setText(R.string.edit_visit);
-                    Visit finalServiceVisit = serviceVisit;
                     manualProcessVisit.setOnClickListener(view -> {
                         try {
-                            VmmcVisitsUtil.manualProcessVisit(finalServiceVisit);
+                            VmmcVisitsUtil.manualProcessVisit(getServiceVisit());
                             displayToast(R.string.vmmc_visit_conducted);
                             setupViews();
                         } catch (Exception e) {
@@ -267,7 +222,7 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                 } else {
                     manualProcessVisit.setVisibility(View.GONE);
                 }
-                if (isVisitOnProgress(serviceVisit)) {
+                if (isVisitOnProgress(getServiceVisit())) {
                     textViewRecordVmmc.setVisibility(View.GONE);
                     vmmcServiceInProgress.setVisibility(View.VISIBLE);
                 } else {
@@ -277,20 +232,19 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
 
                 processVmmcService();
 
-                if (isVisitOnProgress(serviceVisit)) {
+                if (isVisitOnProgress(getServiceVisit())) {
                     findViewById(R.id.family_vmmc_head).setVisibility(View.GONE);
                 }
 
             }
 
-            if (procedureVisit != null) {
-                if (!procedureVisit.getProcessed() && VmmcVisitsUtil.getVmmcProcedureVisitStatus(procedureVisit).equalsIgnoreCase(VmmcVisitsUtil.Complete)) {
+            if (getVmmcProcedureVisit() != null) {
+                if (!getVmmcProcedureVisit().getProcessed() && VmmcVisitsUtil.getVmmcProcedureVisitStatus(getVmmcProcedureVisit()).equalsIgnoreCase(VmmcVisitsUtil.Complete)) {
                     manualProcessVisit.setVisibility(View.VISIBLE);
                     textViewContinueVmmcProcedure.setText(R.string.edit_visit);
-                    Visit finalProcedureVisit = procedureVisit;
                     manualProcessVisit.setOnClickListener(view -> {
                         try {
-                            VmmcVisitsUtil.manualProcessVisit(finalProcedureVisit);
+                            VmmcVisitsUtil.manualProcessVisit(getVmmcProcedureVisit());
                             displayToast(R.string.vmmc_visit_conducted);
                             setupViews();
                         } catch (Exception e) {
@@ -301,7 +255,7 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                     manualProcessVisit.setVisibility(View.GONE);
                 }
 
-                if (isVisitOnProgress(procedureVisit)) {
+                if (isVisitOnProgress(getVmmcProcedureVisit())) {
                     textViewProcedureVmmc.setVisibility(View.GONE);
                     vmmcProcedureInProgress.setVisibility(View.VISIBLE);
                 } else {
@@ -312,17 +266,15 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                 processVmmcProcedure();
             }
 
-            if (dischargeVisit != null) {
-                if ((!dischargeVisit.getProcessed() && VmmcVisitsUtil.getVmmcVisitStatus(dischargeVisit).equalsIgnoreCase(VmmcVisitsUtil.Complete))) {
+            if (getVmmcDischargeVisit() != null) {
+                if ((!getVmmcDischargeVisit().getProcessed() && VmmcVisitsUtil.getVmmcVisitStatus(getVmmcDischargeVisit()).equalsIgnoreCase(VmmcVisitsUtil.Complete))) {
                     manualProcessVisit.setVisibility(View.VISIBLE);
                     textViewContinueVmmc.setText(R.string.edit_visit);
-                    Visit finalDischargeVisit = dischargeVisit;
-                    Visit finalNotifiableVisit = notifiableVisit;
                     manualProcessVisit.setOnClickListener(view -> {
                         try {
-                            VmmcVisitsUtil.manualProcessVisit(finalDischargeVisit);
-                            if(finalNotifiableVisit != null){
-                                VmmcVisitsUtil.manualProcessVisit(finalNotifiableVisit);
+                            VmmcVisitsUtil.manualProcessVisit(getVmmcDischargeVisit());
+                            if (getNotifiableVisit() != null) {
+                                VmmcVisitsUtil.manualProcessVisit(getNotifiableVisit());
                             }
                             displayToast(R.string.vmmc_visit_conducted);
                             setupViews();
@@ -334,7 +286,7 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                     manualProcessVisit.setVisibility(View.GONE);
                 }
 
-                if (isVisitOnProgress(dischargeVisit)) {
+                if (isVisitOnProgress(getVmmcDischargeVisit())) {
                     textViewDischargeVmmc.setVisibility(View.GONE);
                     visitInProgress.setVisibility(View.VISIBLE);
                 } else {
@@ -345,10 +297,10 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                 processVmmcDischarge();
             }
 
-            if (followUpVisit != null) {
-                VmmcVisitsUtil.manualProcessVisit(followUpVisit);
-                if (notifiableVisit != null){
-                    VmmcVisitsUtil.manualProcessVisit(notifiableVisit);
+            if (getFollowupVisit() != null) {
+                VmmcVisitsUtil.manualProcessVisit(getFollowupVisit());
+                if (getNotifiableVisit() != null) {
+                    VmmcVisitsUtil.manualProcessVisit(getNotifiableVisit());
                 }
                 processVmmcDischarge();
             }
@@ -358,8 +310,29 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
         }
     }
 
-    private void processVmmcDischarge() {
+    protected Visit getServiceVisit() {
+        return VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_SERVICES);
+    }
 
+    protected Visit getVmmcProcedureVisit() {
+        return VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_PROCEDURE);
+    }
+
+    protected Visit getVmmcDischargeVisit() {
+        return VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_DISCHARGE);
+    }
+
+    protected Visit getFollowupVisit() {
+        return VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_FOLLOW_UP_VISIT);
+    }
+
+
+    protected Visit getNotifiableVisit() {
+        return VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_NOTIFIABLE_EVENTS);
+    }
+
+    protected void processVmmcDischarge() {
+        String dischargeCondition = VmmcDao.getDischargeCondition(memberObject.getBaseEntityId());
         if (dischargeCondition.equalsIgnoreCase(Constants.VALUES.SATISFACTORY) || dischargeCondition.equalsIgnoreCase(Constants.VALUES.NEEDS_FOLLOWUP)) {
             textViewRecordVmmc.setVisibility(View.GONE);
             textViewProcedureVmmc.setVisibility(View.GONE);
@@ -368,7 +341,8 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
         }
     }
 
-    private void processVmmcProcedure() {
+    protected void processVmmcProcedure() {
+        String mcConducted = VmmcDao.getMcConducted(memberObject.getBaseEntityId());
         if (mcConducted.equalsIgnoreCase(Constants.VALUES.YES)) {
             textViewRecordVmmc.setVisibility(View.GONE);
             textViewProcedureVmmc.setVisibility(View.GONE);
@@ -376,7 +350,31 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
         }
     }
 
-    private void processVmmcService() {
+    protected void processVmmcService() {
+        if (!checkContraIndications()) {
+            textViewRecordVmmc.setVisibility(View.GONE);
+            textViewProcedureVmmc.setVisibility(View.VISIBLE);
+            textViewDischargeVmmc.setVisibility(View.GONE);
+            textViewNotifiableVmmc.setVisibility(View.GONE);
+            rlLastVisit.setVisibility(View.VISIBLE);
+            findViewById(R.id.family_vmmc_head).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.family_vmmc_head).setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected boolean checkContraIndications(){
+        String gentialExaminationValue = VmmcDao.getGentialExamination(memberObject.getBaseEntityId());
+        String diagnosedValue = VmmcDao.getDiagnosed(memberObject.getBaseEntityId());
+        String hivTestResultValue = VmmcDao.getHivTestResult(memberObject.getBaseEntityId());
+        String knownAllergiesValue = VmmcDao.getKnownAllergiesValue(memberObject.getBaseEntityId());
+        String symptomsHematologicalDiseaseValue = VmmcDao.getSymptomsHematologicalDiseaseValue(memberObject.getBaseEntityId());
+        String anyComplaintsValue = VmmcDao.getAnyComplaints(memberObject.getBaseEntityId());
+        String viralLoad = VmmcDao.getViralLoad(memberObject.getBaseEntityId());
+        String typeForBloodGlucoseTest = VmmcDao.getTypeForBloodGlucoseTest(memberObject.getBaseEntityId());
+        String bloodGlucoseTest = VmmcDao.getBloodGlucoseTest(memberObject.getBaseEntityId());
+        String systolic = VmmcDao.getSystolic(memberObject.getBaseEntityId());
+        String diastolic = VmmcDao.getDiastolic(memberObject.getBaseEntityId());
 
         boolean isGentialExaminationValid = gentialExaminationValue.equalsIgnoreCase(Constants.VALUES.NONE) || gentialExaminationValue.contains(Constants.VALUES.CHORDAE);
 
@@ -392,7 +390,7 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
                 Integer.parseInt(systolic) < 140 && Integer.parseInt(diastolic) < 90 &&
                 Integer.parseInt(systolic) > 90 && Integer.parseInt(diastolic) > 60) || diagnosedValue.equalsIgnoreCase(Constants.VALUES.NONE) || !diagnosedValue.contains(Constants.VALUES.HYPERTENSION);
 
-        boolean isAllergiesValid = knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.NONE) ||  knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.SILICON_OR_LEXAN);
+        boolean isAllergiesValid = knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.NONE) || knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.SILICON_OR_LEXAN);
 
         boolean isHIVTestResultValid = hivTestResultValue.equalsIgnoreCase(Constants.VALUES.NEGATIVE) || hivTestResultValue.isEmpty();
 
@@ -403,34 +401,13 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
         boolean isBloodPressureValid = (Integer.parseInt(systolic) < 140 && Integer.parseInt(diastolic) < 90) &&
                 (Integer.parseInt(systolic) > 90 && Integer.parseInt(diastolic) > 60);
 
-
-        if (isGentialExaminationValid && isHivValid && isDiabetesValid && isHypetensionValid &&
-                isAllergiesValid && isHIVTestResultValid &&
-                isHematologicalDiseaseValid && isComplaintsValid && isBloodPressureValid) {
-            textViewRecordVmmc.setVisibility(View.GONE);
-            textViewProcedureVmmc.setVisibility(View.VISIBLE);
-            textViewDischargeVmmc.setVisibility(View.GONE);
-            textViewNotifiableVmmc.setVisibility(View.GONE);
-            rlLastVisit.setVisibility(View.VISIBLE);
-            findViewById(R.id.family_vmmc_head).setVisibility(View.GONE);
-        } else
-        {
-            findViewById(R.id.family_vmmc_head).setVisibility(View.VISIBLE);
-        }
+        return !isGentialExaminationValid || !isHivValid || !isDiabetesValid || !isHypetensionValid ||
+                !isAllergiesValid || !isHIVTestResultValid ||
+                !isHematologicalDiseaseValid || !isComplaintsValid || !isBloodPressureValid;
     }
 
     protected MemberObject getMemberObject(String baseEntityId) {
         return VmmcDao.getMember(baseEntityId);
-    }
-
-    @Override
-    public void recordAnc(MemberObject memberObject) {
-        //implement
-    }
-
-    @Override
-    public void recordPnc(MemberObject memberObject) {
-        //implement
     }
 
     @Override
@@ -447,29 +424,20 @@ public class BaseVmmcProfileActivity extends BaseProfileActivity implements Vmmc
         } else if (id == R.id.textview_record_vmmc) {
             this.openFollowupVisit();
         } else if (id == R.id.textview_procedure_vmmc) {
-            //implement
+            startProcedure();
         } else if (id == R.id.textview_discharge_vmmc) {
-            //implement
+            startDischarge();
         } else if (id == R.id.textview_notifiable_vmmc) {
-            this.startVmmcNotifiableForm(memberObject.getBaseEntityId());
+            this.startNotifiableForm();
         } else if (id == R.id.textview_followup_vmmc) {
-            this.startVmmcFollowUp(memberObject.getBaseEntityId());
+            this.startFollowUp();
+        } else if (id == R.id.continue_vmmc_service) {
+            this.continueService();
+        }else if (id == R.id.continue_vmmc_procedure) {
+            this.continueProcedure();
+        }else if (id == R.id.textview_continue) {
+            this.continueDischarge();
         }
-    }
-
-    @Override
-    public void startVmmcNotifiableForm(String baseEntityId) {
-        //implement
-    }
-
-    @Override
-    public void startVmmcFollowUp(String baseEntityId) {
-        //implement
-    }
-
-    @Override
-    public void startVmmcServiceForm(String baseEntityId) {
-        //implement
     }
 
     @Override

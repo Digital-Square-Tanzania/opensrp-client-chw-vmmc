@@ -34,7 +34,7 @@ public interface BaseVmmcVisitContract {
 
         void close();
 
-        void submittedAndClose();
+        void submittedAndClose(String results);
 
         Presenter getPresenter();
 
@@ -115,6 +115,6 @@ public interface BaseVmmcVisitContract {
 
         void preloadActions(LinkedHashMap<String, BaseVmmcVisitAction> map);
 
-        void onSubmitted(boolean successful);
+        void onSubmitted(String results);
     }
 }

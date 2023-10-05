@@ -6,32 +6,27 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
-import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
-import com.vijay.jsonwizard.domain.Form;
-import com.vijay.jsonwizard.factory.FileSourceFactoryHelper;
-
 import org.json.JSONObject;
-import org.smartregister.chw.vmmc.VmmcLibrary;
 import org.smartregister.chw.vmmc.activity.BaseVmmcProfileActivity;
+import org.smartregister.chw.vmmc.dao.VmmcDao;
 import org.smartregister.chw.vmmc.domain.MemberObject;
 import org.smartregister.chw.vmmc.domain.Visit;
 import org.smartregister.chw.vmmc.util.Constants;
-import org.smartregister.chw.vmmc_sample.R;
 
 import timber.log.Timber;
 
 
 public class VmmcMemberProfileActivity extends BaseVmmcProfileActivity {
+    private Visit serviceVisit = null;
+    private Visit procedureVisit = null;
+    private Visit dischargeVisit = null;
+    private Visit followupVisit = null;
+    private Visit notifiableVisit = null;
 
     public static void startMe(Activity activity, String baseEntityID) {
         Intent intent = new Intent(activity, VmmcMemberProfileActivity.class);
         intent.putExtra(Constants.ACTIVITY_PAYLOAD.BASE_ENTITY_ID, baseEntityID);
-        activity.startActivityForResult(intent, Constants.REQUEST_CODE_GET_JSON);
-    }
-
-    @Override
-    public void recordAnc(MemberObject memberObject) {
-        VmmcServiceActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -40,86 +35,73 @@ public class VmmcMemberProfileActivity extends BaseVmmcProfileActivity {
     }
 
     @Override
-    protected void setupViews() {
-        initializeFloatingMenu();
-
-        Visit serviceVisit = null;
-        Visit procedureVisit = null;
-        Visit dischargeVisit = null;
-        Visit followUpVisit = null;
-        // Visit notifiableVisit = null;
-
-        try {
-            serviceVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_SERVICES);
-            procedureVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_PROCEDURE);
-            dischargeVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_DISCHARGE);
-            followUpVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_FOLLOW_UP_VISIT);
-            // notifiableVisit = VmmcLibrary.getInstance().visitRepository().getLatestVisit(memberObject.getBaseEntityId(), Constants.EVENT_TYPE.VMMC_NOTIFIABLE_EVENTS);
-        }
-        catch (Exception e){
-            // implement later
-        }
-
-
-        if (serviceVisit != null) {
-                textViewRecordVmmc.setText(org.smartregister.chw.vmmc.R.string.record_vmmc);
-            } else if (procedureVisit != null) {
-                textViewRecordVmmc.setText(org.smartregister.chw.vmmc.R.string.vmmc_procedure);
-            } else if (dischargeVisit != null) {
-                textViewRecordVmmc.setText(org.smartregister.chw.vmmc.R.string.vmmc_discharge);
-            } else if (followUpVisit != null) {
-                textViewRecordVmmc.setText(org.smartregister.chw.vmmc.R.string.vmmc_followup_visit);
-            } else {
-                textViewRecordVmmc.setText(org.smartregister.chw.vmmc.R.string.record_vmmc);
-            }
-
-    }
-
-    @Override
     public void openFollowupVisit() {
         VmmcServiceActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
     }
 
     @Override
-    public void onClick(View view) {
-        int id = view.getId();
-
-        if (id == R.id.textview_procedure_vmmc) {
-            VmmcProcedureActivity.startVmmcVisitProcedureActivity(this, memberObject.getBaseEntityId(), false);
-        }
-
-        if (id == R.id.textview_discharge_vmmc) {
-            VmmcDischargeActivity.startVmmcVisitDischargeActivity(this, memberObject.getBaseEntityId(), false);
-        }
-
-        if (id == R.id.textview_notifiable_vmmc) {
-            VmmcNotifiableAdverseActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
-        }
-        if (id == R.id.textview_followup_vmmc) {
-            VmmcFollowUpActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
-        }
-        if (id == R.id.continue_vmmc_service) {
-            VmmcServiceActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), true);
-        }
-        if (id == R.id.continue_vmmc_procedure) {
-            VmmcProcedureActivity.startVmmcVisitProcedureActivity(this, memberObject.getBaseEntityId(), true);
-        }
-        if (id == R.id.textview_continue) {
-            VmmcDischargeActivity.startVmmcVisitDischargeActivity(this, memberObject.getBaseEntityId(), true);
-        }
-        else {
-            super.onClick(view);
-        }
-    }
-
-    @Override
-    public void startVmmcServiceForm(String baseEntityId) {
+    public void startServiceForm() {
         VmmcServiceActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
     }
 
     @Override
-    public void startVmmcFollowUp(String baseEntityId) {
+    public void startNotifiableForm() {
+        VmmcNotifiableAdverseActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
+    }
+
+    @Override
+    public void startFollowUp() {
         VmmcFollowUpActivity.startVmmcVisitActivity(this, memberObject.getBaseEntityId(), false);
+    }
+
+    @Override
+    public void startProcedure() {
+        VmmcProcedureActivity.startVmmcVisitProcedureActivity(this, memberObject.getBaseEntityId(), false);
+    }
+
+    @Override
+    public void startDischarge() {
+        VmmcDischargeActivity.startVmmcVisitDischargeActivity(this, memberObject.getBaseEntityId(), false);
+    }
+
+    @Override
+    public void continueService() {
+
+    }
+
+    @Override
+    public void continueProcedure() {
+
+    }
+
+    @Override
+    public void continueDischarge() {
+
+    }
+
+    @Override
+    protected Visit getServiceVisit() {
+        return serviceVisit;
+    }
+
+    @Override
+    protected Visit getVmmcProcedureVisit() {
+        return procedureVisit;
+    }
+
+    @Override
+    protected Visit getVmmcDischargeVisit() {
+        return dischargeVisit;
+    }
+
+    @Override
+    protected Visit getFollowupVisit() {
+        return followupVisit;
+    }
+
+    @Override
+    protected Visit getNotifiableVisit() {
+        return notifiableVisit;
     }
 
     @Override
@@ -135,5 +117,73 @@ public class VmmcMemberProfileActivity extends BaseVmmcProfileActivity {
         } catch (Exception e) {
             Timber.e(e);
         }
+    }
+
+    @Override
+    protected boolean checkContraIndications() {
+        return false;
+    }
+
+    @Override
+    protected void processVmmcProcedure() {
+        textViewRecordVmmc.setVisibility(View.GONE);
+        textViewProcedureVmmc.setVisibility(View.GONE);
+        textViewDischargeVmmc.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void processVmmcDischarge() {
+            textViewRecordVmmc.setVisibility(View.GONE);
+            textViewProcedureVmmc.setVisibility(View.GONE);
+            textViewDischargeVmmc.setVisibility(View.GONE);
+            textViewFollowUpVmmc.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE_GET_JSON && resultCode == Activity.RESULT_OK) {
+            try {
+                String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
+                JSONObject form = new JSONObject(jsonString);
+                String encounterType = form.getString(Constants.JSON_FORM_EXTRA.EVENT_TYPE);
+                switch (encounterType) {
+                    case Constants.EVENT_TYPE.VMMC_SERVICES:
+                        serviceVisit = new Visit();
+                        serviceVisit.setProcessed(true);
+                        serviceVisit.setJson(jsonString);
+                        break;
+                    case Constants.EVENT_TYPE.VMMC_PROCEDURE:
+                        procedureVisit = new Visit();
+                        procedureVisit.setProcessed(true);
+                        procedureVisit.setProcessed(true);
+                        procedureVisit.setJson(jsonString);
+                        break;
+                    case Constants.EVENT_TYPE.VMMC_DISCHARGE:
+                        dischargeVisit = new Visit();
+                        dischargeVisit.setProcessed(true);
+                        dischargeVisit.setJson(jsonString);
+
+                        notifiableVisit = new Visit();
+                        notifiableVisit.setProcessed(true);
+                        notifiableVisit.setJson(jsonString);
+                        break;
+                    case Constants.EVENT_TYPE.VMMC_FOLLOW_UP_VISIT:
+                        followupVisit = new Visit();
+                        followupVisit.setProcessed(true);
+                        followupVisit.setJson(jsonString);
+
+                        notifiableVisit = new Visit();
+                        notifiableVisit.setProcessed(true);
+                        notifiableVisit.setJson(jsonString);
+                        break;
+
+
+                }
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+
+        }
+
     }
 }

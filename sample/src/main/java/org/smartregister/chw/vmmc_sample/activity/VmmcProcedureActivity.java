@@ -27,7 +27,7 @@ public class VmmcProcedureActivity extends BaseVmmcVisitActivity {
         intent.putExtra(Constants.ACTIVITY_PAYLOAD.BASE_ENTITY_ID, baseEntityId);
         intent.putExtra(Constants.ACTIVITY_PAYLOAD.EDIT_MODE, editMode);
         intent.putExtra(Constants.ACTIVITY_PAYLOAD.PROFILE_TYPE, Constants.PROFILE_TYPES.VMMC_PROFILE);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, Constants.REQUEST_CODE_GET_JSON);
     }
 
     @Override
@@ -53,25 +53,11 @@ public class VmmcProcedureActivity extends BaseVmmcVisitActivity {
     }
 
     @Override
-    public void submittedAndClose() {
+    public void submittedAndClose(String results) {
         Intent returnIntent = new Intent();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject = new JSONObject(actionList.get(getString(R.string.vmmc_mc_procedure)).getJsonPayload());
-            jsonObject.put(ENCOUNTER_TYPE, Constants.EVENT_TYPE.VMMC_PROCEDURE);
-        } catch (JSONException e) {
-            Timber.e(e);
-        }
-        returnIntent.putExtra(Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
+        returnIntent.putExtra(Constants.JSON_FORM_EXTRA.JSON, results);
         setResult(Activity.RESULT_OK, returnIntent);
         close();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        // get language from prefs
-        String lang = LangUtils.getLanguage(base.getApplicationContext());
-        super.attachBaseContext(LangUtils.setAppLocale(base, lang));
     }
 
 }

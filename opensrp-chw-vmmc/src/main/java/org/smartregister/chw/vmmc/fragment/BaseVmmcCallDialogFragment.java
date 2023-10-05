@@ -17,10 +17,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.chw.vmmc.R;
 import org.smartregister.chw.vmmc.contract.BaseVmmcCallDialogContract;
 import org.smartregister.chw.vmmc.domain.MemberObject;
 import org.smartregister.chw.vmmc.listener.BaseVmmcCallWidgetDialogListener;
-import org.smartregister.chw.vmmc.R;
 
 public class BaseVmmcCallDialogFragment extends DialogFragment implements BaseVmmcCallDialogContract.View {
 
@@ -70,12 +70,8 @@ public class BaseVmmcCallDialogFragment extends DialogFragment implements BaseVm
         TextView callTitle = rootView.findViewById(viewId);
         if (MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getFamilyHead())) {
             callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_family_head)));
-        } else if ("0".equals(MEMBER_OBJECT.getAncMember())) {
-            callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_anc_client)));
         } else if (MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getPrimaryCareGiver())) {
             callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_primary_caregiver)));
-        } else if ("0".equals(MEMBER_OBJECT.getPncMember())) {
-            callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_pnc_client)));
         } else {
             callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_vmmc_client)));
         }

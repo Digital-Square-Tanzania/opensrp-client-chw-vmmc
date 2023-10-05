@@ -19,6 +19,8 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.chw.vmmc.VmmcLibrary;
@@ -222,7 +224,8 @@ public class BaseVmmcVisitActivity extends SecuredActivity implements BaseVmmcVi
 
     @Override
     public void redrawHeader(MemberObject memberObject) {
-        tvTitle.setText(MessageFormat.format("{0}, {1}", memberObject.getFullName(), String.valueOf(memberObject.getVisitAge())));
+        int age = new Period(new DateTime(memberObject.getAge()), new DateTime()).getYears();
+        tvTitle.setText(MessageFormat.format("{0}, {1}", memberObject.getFullName(), String.valueOf(age)));
     }
 
     @Override
@@ -262,7 +265,7 @@ public class BaseVmmcVisitActivity extends SecuredActivity implements BaseVmmcVi
     }
 
     @Override
-    public void submittedAndClose() {
+    public void submittedAndClose(String results) {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         close();

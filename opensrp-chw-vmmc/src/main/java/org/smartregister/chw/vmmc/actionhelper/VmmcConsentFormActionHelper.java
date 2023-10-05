@@ -5,6 +5,8 @@ import android.content.Context;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +23,6 @@ public class VmmcConsentFormActionHelper implements BaseVmmcVisitAction.VmmcVisi
     protected String consent_form;
 
     protected String jsonPayload;
-
-    protected String mc_procedure;
-
-    protected Integer age;
 
     protected Context context;
 
@@ -47,7 +45,7 @@ public class VmmcConsentFormActionHelper implements BaseVmmcVisitAction.VmmcVisi
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
 
-            age = memberObject.getVisitAge();
+            int age = new Period(new DateTime(memberObject.getAge()), new DateTime()).getYears();
 
             JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
 
@@ -67,7 +65,6 @@ public class VmmcConsentFormActionHelper implements BaseVmmcVisitAction.VmmcVisi
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
             consent_form = JsonFormUtils.getValue(jsonObject, "client_consent_for_mc_procedure");
-            mc_procedure = JsonFormUtils.getValue(jsonObject, "consent_from");
 
         } catch (JSONException e) {
             e.printStackTrace();
