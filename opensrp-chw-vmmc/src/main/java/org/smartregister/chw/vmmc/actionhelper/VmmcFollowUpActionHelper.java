@@ -24,14 +24,14 @@ import java.util.Objects;
 public class VmmcFollowUpActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     public Integer noOfDayPostOP;
-    protected String visit_type;
+
     protected String notifiable_adverse_event_occured;
+
     protected String follow_up_visit_type;
+
     protected String jsonPayload;
+
     protected String baseEntityId;
-
-    protected int followupVisit;
-
 
 
     public VmmcFollowUpActionHelper(String baseEntityId) {
