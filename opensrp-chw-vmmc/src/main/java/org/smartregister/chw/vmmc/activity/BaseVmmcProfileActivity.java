@@ -47,7 +47,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
 
-public abstract class BaseVmmcProfileActivity extends BaseProfileActivity implements VmmcProfileContract.View, VmmcProfileContract.InteractorCallBack {
+public abstract class BaseVmmcProfileActivity
+        extends BaseProfileActivity
+        implements VmmcProfileContract.View,
+        VmmcProfileContract.InteractorCallBack {
+
     protected MemberObject memberObject;
     protected VmmcProfileContract.Presenter profilePresenter;
     protected CircleImageView imageView;

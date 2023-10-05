@@ -51,7 +51,8 @@ public class VmmcHtsActionHelper implements BaseVmmcVisitAction.VmmcVisitActionH
             JSONObject jsonObject = new JSONObject(jsonPayload);
             JSONObject global = jsonObject.getJSONObject("global");
 
-            int age = new Period(new DateTime(memberObject.getAge()), new DateTime()).getYears();
+            int age = new Period(new DateTime(memberObject.getAge()),
+                    new DateTime()).getYears();
 
             JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
 

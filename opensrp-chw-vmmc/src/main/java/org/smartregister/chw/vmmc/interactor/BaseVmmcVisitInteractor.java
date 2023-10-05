@@ -159,13 +159,18 @@ public class BaseVmmcVisitInteractor implements BaseVmmcVisitContract.Interactor
             }
 
             String finalResults = results;
-            appExecutors.mainThread().execute(() -> callBack.onSubmitted(finalResults));
+            appExecutors.mainThread().execute(() ->
+                    callBack.onSubmitted(finalResults));
         };
 
         appExecutors.diskIO().execute(runnable);
     }
 
-    protected String submitVisit(final boolean editMode, final String memberID, final Map<String, BaseVmmcVisitAction> map, String parentEventType) throws Exception {
+    protected String submitVisit(final boolean editMode,
+                                 final String memberID,
+                                 final Map<String,
+                                 BaseVmmcVisitAction> map,
+                                 String parentEventType) throws Exception {
         // create a map of the different types
 
         Map<String, BaseVmmcVisitAction> externalVisits = new HashMap<>();
