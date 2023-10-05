@@ -9,6 +9,47 @@ import java.util.List;
 import java.util.Locale;
 
 public class VmmcDao extends AbstractDao {
+    private static final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+    private static final DataMap<MemberObject> memberObjectMap = cursor -> {
+
+        MemberObject memberObject = new MemberObject();
+
+        memberObject.setFirstName(getCursorValue(cursor, "first_name", ""));
+        memberObject.setMiddleName(getCursorValue(cursor, "middle_name", ""));
+        memberObject.setLastName(getCursorValue(cursor, "last_name", ""));
+        memberObject.setAddress(getCursorValue(cursor, "village_town"));
+        memberObject.setGender(getCursorValue(cursor, "gender"));
+        memberObject.setUniqueId(getCursorValue(cursor, "unique_id", ""));
+        memberObject.setAge(getCursorValue(cursor, "dob"));
+        memberObject.setFamilyBaseEntityId(getCursorValue(cursor, "relational_id", ""));
+        memberObject.setRelationalId(getCursorValue(cursor, "relational_id", ""));
+        memberObject.setPrimaryCareGiver(getCursorValue(cursor, "primary_caregiver"));
+        memberObject.setFamilyName(getCursorValue(cursor, "family_name", ""));
+        memberObject.setPhoneNumber(getCursorValue(cursor, "phone_number", ""));
+        memberObject.setVmmcTestDate(getCursorValueAsDate(cursor, "vmmc_test_date", df));
+        memberObject.setBaseEntityId(getCursorValue(cursor, "base_entity_id", ""));
+        memberObject.setFamilyHead(getCursorValue(cursor, "family_head", ""));
+        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "pcg_phone_number", ""));
+        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "family_head_phone_number", ""));
+        memberObject.setEnrollmentDate(getCursorValue(cursor, "enrollment_date", ""));
+
+        String familyHeadName = getCursorValue(cursor, "family_head_first_name", "") + " "
+                + getCursorValue(cursor, "family_head_middle_name", "");
+
+        familyHeadName =
+                (familyHeadName.trim() + " " + getCursorValue(cursor, "family_head_last_name", "")).trim();
+        memberObject.setFamilyHeadName(familyHeadName);
+
+        String familyPcgName = getCursorValue(cursor, "pcg_first_name", "") + " "
+                + getCursorValue(cursor, "pcg_middle_name", "");
+
+        familyPcgName =
+                (familyPcgName.trim() + " " + getCursorValue(cursor, "pcg_last_name", "")).trim();
+        memberObject.setPrimaryCareGiverName(familyPcgName);
+
+        return memberObject;
+    };
 
     public static Date getVmmcTestDate(String baseEntityID) {
         String sql = "select vmmc_test_date from ec_vmmc_enrollment where base_entity_id = '" + baseEntityID + "'";
@@ -138,6 +179,7 @@ public class VmmcDao extends AbstractDao {
         }
         return "";
     }
+
     public static String getViralLoad(String baseEntityId) {
         String sql = "SELECT hiv_viral_load_text FROM ec_vmmc_services p " +
                 " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
@@ -278,95 +320,6 @@ public class VmmcDao extends AbstractDao {
         return 0;
     }
 
-    public static MemberObject getVmmcMember(String baseEntityID) {
-        String sql = "select m.base_entity_id,\n" +
-                "       m.unique_id,\n" +
-                "       m.relational_id,\n" +
-                "       m.dob,\n" +
-                "       m.first_name,\n" +
-                "       m.middle_name,\n" +
-                "       m.last_name,\n" +
-                "       m.gender,\n" +
-                "       m.phone_number,\n" +
-                "       m.other_phone_number,\n" +
-                "       f.first_name     family_name,\n" +
-                "       f.primary_caregiver,\n" +
-                "       f.family_head,\n" +
-                "       f.village_town,\n" +
-                "       fh.first_name    family_head_first_name,\n" +
-                "       fh.middle_name   family_head_middle_name,\n" +
-                "       fh.last_name     family_head_last_name,\n" +
-                "       fh.phone_number  family_head_phone_number,\n" +
-                "       ancr.is_closed   anc_is_closed,\n" +
-                "       pncr.is_closed   pnc_is_closed,\n" +
-                "       pcg.first_name   pcg_first_name,\n" +
-                "       pcg.last_name    pcg_last_name,\n" +
-                "       pcg.middle_name  pcg_middle_name,\n" +
-                "       pcg.phone_number pcg_phone_number,\n" +
-                "       mr.*\n" +
-                "from ec_family_member m\n" +
-                "         inner join ec_family f on m.relational_id = f.base_entity_id\n" +
-                "         inner join ec_vmmc_enrollment mr on mr.base_entity_id = m.base_entity_id\n" +
-                "         left join ec_family_member fh on fh.base_entity_id = f.family_head\n" +
-                "         left join ec_family_member pcg on pcg.base_entity_id = f.primary_caregiver\n" +
-                "         left join ec_anc_register ancr on ancr.base_entity_id = m.base_entity_id\n" +
-                "         left join ec_pregnancy_outcome pncr on pncr.base_entity_id = m.base_entity_id\n" +
-                "where m.base_entity_id = '" + baseEntityID + "' ";
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        DataMap<MemberObject> dataMap = cursor -> {
-            MemberObject memberObject = new MemberObject();
-
-            memberObject.setFirstName(getCursorValue(cursor, "first_name", ""));
-            memberObject.setMiddleName(getCursorValue(cursor, "middle_name", ""));
-            memberObject.setLastName(getCursorValue(cursor, "last_name", ""));
-            memberObject.setAddress(getCursorValue(cursor, "village_town"));
-            memberObject.setGender(getCursorValue(cursor, "gender"));
-            memberObject.setUniqueId(getCursorValue(cursor, "unique_id", ""));
-            memberObject.setDob(getCursorValue(cursor, "dob"));
-            memberObject.setFamilyBaseEntityId(getCursorValue(cursor, "relational_id", ""));
-            memberObject.setRelationalId(getCursorValue(cursor, "relational_id", ""));
-            memberObject.setPrimaryCareGiver(getCursorValue(cursor, "primary_caregiver"));
-            memberObject.setFamilyName(getCursorValue(cursor, "family_name", ""));
-            memberObject.setPhoneNumber(getCursorValue(cursor, "phone_number", ""));
-            memberObject.setVmmcTestDate(getCursorValueAsDate(cursor, "vmmc_test_date", df));
-            memberObject.setBaseEntityId(getCursorValue(cursor, "base_entity_id", ""));
-            memberObject.setFamilyHead(getCursorValue(cursor, "family_head", ""));
-            memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "pcg_phone_number", ""));
-            memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "family_head_phone_number", ""));
-            memberObject.setAncMember(getCursorValue(cursor, "anc_is_closed", ""));
-            memberObject.setPncMember(getCursorValue(cursor, "pnc_is_closed", ""));
-
-            String familyHeadName = getCursorValue(cursor, "family_head_first_name", "") + " "
-                    + getCursorValue(cursor, "family_head_middle_name", "");
-
-            familyHeadName =
-                    (familyHeadName.trim() + " " + getCursorValue(cursor, "family_head_last_name", "")).trim();
-            memberObject.setFamilyHeadName(familyHeadName);
-
-            String familyPcgName = getCursorValue(cursor, "pcg_first_name", "") + " "
-                    + getCursorValue(cursor, "pcg_middle_name", "");
-
-            familyPcgName =
-                    (familyPcgName.trim() + " " + getCursorValue(cursor, "pcg_last_name", "")).trim();
-            memberObject.setPrimaryCareGiverName(familyPcgName);
-
-            return memberObject;
-        };
-
-        List<MemberObject> res = readData(sql, dataMap);
-        if (res == null || res.size() != 1)
-            return null;
-
-        return res.get(0);
-    }
-
-
-    public static void closeVmmcMemberFromRegister(String baseEntityID) {
-        String sql = "update ec_vmmc_enrollment set is_closed = 1 where base_entity_id = '" + baseEntityID + "'";
-        updateDB(sql);
-    }
-
     public static boolean isRegisteredForVmmc(String baseEntityID) {
 //        String sql = "SELECT count(p.base_entity_id) count FROM ec_vmmc_enrollment p " +
 //                "WHERE p.base_entity_id = '" + baseEntityID + "' AND p.is_closed = 0 AND p.vmmc  = 1 " +
@@ -399,54 +352,77 @@ public class VmmcDao extends AbstractDao {
     }
 
     public static MemberObject getMember(String baseEntityID) {
-        String sql = "select m.base_entity_id , m.unique_id , m.relational_id , m.dob , m.first_name , m.middle_name , m.last_name , m.gender , m.phone_number , m.other_phone_number , f.first_name family_name ,f.primary_caregiver , f.family_head , f.village_town ,fh.first_name family_head_first_name , fh.middle_name family_head_middle_name , fh.last_name family_head_last_name, fh.phone_number family_head_phone_number , ancr.is_closed anc_is_closed, pncr.is_closed pnc_is_closed, pcg.first_name pcg_first_name , pcg.last_name pcg_last_name , pcg.middle_name pcg_middle_name , pcg.phone_number  pcg_phone_number , mr.* from ec_family_member m inner join ec_family f on m.relational_id = f.base_entity_id inner join ec_vmmc_enrollment mr on mr.base_entity_id = m.base_entity_id left join ec_family_member fh on fh.base_entity_id = f.family_head left join ec_family_member pcg on pcg.base_entity_id = f.primary_caregiver left join ec_anc_register ancr on ancr.base_entity_id = m.base_entity_id left join ec_pregnancy_outcome pncr on pncr.base_entity_id = m.base_entity_id where m.base_entity_id ='" + baseEntityID + "' ";
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        DataMap<MemberObject> dataMap = cursor -> {
-            MemberObject memberObject = new MemberObject();
-
-            memberObject.setFirstName(getCursorValue(cursor, "first_name", ""));
-            memberObject.setMiddleName(getCursorValue(cursor, "middle_name", ""));
-            memberObject.setLastName(getCursorValue(cursor, "last_name", ""));
-            memberObject.setAddress(getCursorValue(cursor, "village_town"));
-            memberObject.setGender(getCursorValue(cursor, "gender"));
-            memberObject.setUniqueId(getCursorValue(cursor, "unique_id", ""));
-            memberObject.setAge(getCursorValue(cursor, "dob"));
-            memberObject.setFamilyBaseEntityId(getCursorValue(cursor, "relational_id", ""));
-            memberObject.setRelationalId(getCursorValue(cursor, "relational_id", ""));
-            memberObject.setPrimaryCareGiver(getCursorValue(cursor, "primary_caregiver"));
-            memberObject.setFamilyName(getCursorValue(cursor, "family_name", ""));
-            memberObject.setPhoneNumber(getCursorValue(cursor, "phone_number", ""));
-            memberObject.setVmmcTestDate(getCursorValueAsDate(cursor, "vmmc_test_date", df));
-            memberObject.setBaseEntityId(getCursorValue(cursor, "base_entity_id", ""));
-            memberObject.setFamilyHead(getCursorValue(cursor, "family_head", ""));
-            memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "pcg_phone_number", ""));
-            memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "family_head_phone_number", ""));
-            memberObject.setAncMember(getCursorValue(cursor, "anc_is_closed", ""));
-            memberObject.setPncMember(getCursorValue(cursor, "pnc_is_closed", ""));
-
-            String familyHeadName = getCursorValue(cursor, "family_head_first_name", "") + " "
-                    + getCursorValue(cursor, "family_head_middle_name", "");
-
-            familyHeadName =
-                    (familyHeadName.trim() + " " + getCursorValue(cursor, "family_head_last_name", "")).trim();
-            memberObject.setFamilyHeadName(familyHeadName);
-
-            String familyPcgName = getCursorValue(cursor, "pcg_first_name", "") + " "
-                    + getCursorValue(cursor, "pcg_middle_name", "");
-
-            familyPcgName =
-                    (familyPcgName.trim() + " " + getCursorValue(cursor, "pcg_last_name", "")).trim();
-            memberObject.setPrimaryCareGiverName(familyPcgName);
-
-            return memberObject;
-        };
-
-        List<MemberObject> res = readData(sql, dataMap);
+        String sql = "select " +
+                "m.base_entity_id , " +
+                "m.unique_id , " +
+                "m.relational_id , " +
+                "m.dob , " +
+                "m.first_name , " +
+                "m.middle_name , " +
+                "m.last_name , " +
+                "m.gender , " +
+                "m.phone_number , " +
+                "m.other_phone_number , " +
+                "f.first_name as family_name ," +
+                "f.primary_caregiver , " +
+                "f.family_head , " +
+                "f.village_town ," +
+                "fh.first_name as family_head_first_name , " +
+                "fh.middle_name as family_head_middle_name , " +
+                "fh.last_name as family_head_last_name, " +
+                "fh.phone_number as family_head_phone_number ,  " +
+                "pcg.first_name as pcg_first_name , " +
+                "pcg.last_name as pcg_last_name , " +
+                "pcg.middle_name as pcg_middle_name , " +
+                "pcg.phone_number as  pcg_phone_number , " +
+                "mr.* " +
+                "from ec_family_member m " +
+                "inner join ec_family f on m.relational_id = f.base_entity_id " +
+                "inner join ec_vmmc_enrollment mr on mr.base_entity_id = m.base_entity_id " +
+                "left join ec_family_member fh on fh.base_entity_id = f.family_head " +
+                "left join ec_family_member pcg on pcg.base_entity_id = f.primary_caregiver " +
+                "where mr.is_closed = 0 AND m.base_entity_id ='" + baseEntityID + "' ";
+        List<MemberObject> res = readData(sql, memberObjectMap);
         if (res == null || res.size() != 1)
             return null;
 
         return res.get(0);
     }
 
+    public static List<MemberObject> getMembers() {
+        String sql = "select " +
+                "m.base_entity_id , " +
+                "m.unique_id , " +
+                "m.relational_id , " +
+                "m.dob , " +
+                "m.first_name , " +
+                "m.middle_name , " +
+                "m.last_name , " +
+                "m.gender , " +
+                "m.phone_number , " +
+                "m.other_phone_number , " +
+                "f.first_name as family_name ," +
+                "f.primary_caregiver , " +
+                "f.family_head , " +
+                "f.village_town ," +
+                "fh.first_name as family_head_first_name , " +
+                "fh.middle_name as family_head_middle_name , " +
+                "fh.last_name as family_head_last_name, " +
+                "fh.phone_number as family_head_phone_number ,  " +
+                "pcg.first_name as pcg_first_name , " +
+                "pcg.last_name as pcg_last_name , " +
+                "pcg.middle_name as pcg_middle_name , " +
+                "pcg.phone_number as  pcg_phone_number , " +
+                "mr.* " +
+                "from ec_family_member m " +
+                "inner join ec_family f on m.relational_id = f.base_entity_id " +
+                "inner join ec_vmmc_enrollment mr on mr.base_entity_id = m.base_entity_id " +
+                "left join ec_family_member fh on fh.base_entity_id = f.family_head " +
+                "left join ec_family_member pcg on pcg.base_entity_id = f.primary_caregiver " +
+                "where mr.is_closed = 0 ";
+
+        return readData(sql, memberObjectMap);
+    }
+
 }
+

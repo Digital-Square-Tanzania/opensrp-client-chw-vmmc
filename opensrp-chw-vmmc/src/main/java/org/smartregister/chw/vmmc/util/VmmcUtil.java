@@ -22,8 +22,11 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 import org.opensrp.api.constants.Gender;
+import org.smartregister.chw.vmmc.R;
 import org.smartregister.chw.vmmc.VmmcLibrary;
 import org.smartregister.chw.vmmc.contract.BaseVmmcCallDialogContract;
 import org.smartregister.chw.vmmc.dao.VmmcDao;
@@ -33,7 +36,6 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.PermissionUtils;
-import org.smartregister.chw.vmmc.R;
 
 import java.util.Date;
 
@@ -124,21 +126,6 @@ public class VmmcUtil {
         return R.mipmap.ic_member;
     }
 
-    public static class CloseVmmcMemberFromRegister extends AsyncTask<Void, Void, Void> {
-        private final String baseEntityId;
-
-        public CloseVmmcMemberFromRegister(String baseEntityId) {
-            this.baseEntityId = baseEntityId;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            VmmcDao.closeVmmcMemberFromRegister(baseEntityId);
-            return null;
-        }
-
-    }
-
     public static String getGenderTranslated(Context context, String gender) {
         if (gender.equalsIgnoreCase(Gender.MALE.toString())) {
             return context.getResources().getString(R.string.male);
@@ -147,4 +134,27 @@ public class VmmcUtil {
         }
         return "";
     }
+
+    protected static Event getCloseVmmcEvent(String jsonString, String baseEntityId) {
+        Event closeVmmcEvent = new Gson().fromJson(jsonString, Event.class);
+
+        closeVmmcEvent.setEntityType(Constants.TABLES.VMMC_ENROLLMENT);
+        closeVmmcEvent.setEventType(Constants.EVENT_TYPE.CLOSE_VMMC_SERVICE);
+        closeVmmcEvent.setBaseEntityId(baseEntityId);
+        closeVmmcEvent.setFormSubmissionId(JsonFormUtils.generateRandomUUIDString());
+        closeVmmcEvent.setEventDate(new Date());
+        return closeVmmcEvent;
+    }
+
+    public static void closeVmmcService(String baseEntityId) {
+        AllSharedPreferences allSharedPreferences = VmmcLibrary.getInstance().context().allSharedPreferences();
+        Event closeVmmcEvent = getCloseVmmcEvent(new JSONObject().toString(), baseEntityId);
+        try {
+            NCUtils.addEvent(allSharedPreferences, closeVmmcEvent);
+            NCUtils.startClientProcessing();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
 }
+
