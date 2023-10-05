@@ -6,6 +6,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.chw.vmmc.activity.BaseVmmcProfileActivity;
+import org.smartregister.chw.vmmc.fragment.BaseVmmcRegisterFragment;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 
 import static org.mockito.Mockito.times;

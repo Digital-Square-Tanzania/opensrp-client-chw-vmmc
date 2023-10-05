@@ -14,13 +14,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.chw.vmmc.R;
+import org.smartregister.chw.vmmc.activity.BaseVmmcProfileActivity;
+import org.smartregister.chw.vmmc.contract.VmmcProfileContract;
 
 public class BaseVmmcProfileActivityTest {
     @Mock
     public BaseVmmcProfileActivity baseTestProfileActivity;
 
     @Mock
-    public BaseVmmcProfileContract.Presenter profilePresenter;
+    public VmmcProfileContract.Presenter profilePresenter;
 
     @Mock
     public View view;
@@ -38,12 +40,6 @@ public class BaseVmmcProfileActivityTest {
     @Test
     public void assertNotNull() {
         Assert.assertNotNull(baseTestProfileActivity);
-    }
-
-    @Test
-    public void setOverDueColor() {
-        baseTestProfileActivity.setFollowUpButtonOverdue();
-        Mockito.verify(view, Mockito.never()).setBackgroundColor(Color.RED);
     }
 
     @Test

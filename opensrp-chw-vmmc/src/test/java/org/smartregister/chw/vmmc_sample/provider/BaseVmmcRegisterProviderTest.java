@@ -14,9 +14,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.chw.vmmc.provider.VmmcRegisterProvider;
 import org.smartregister.chw.vmmc.util.DBConstants;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
-import org.smartregister.chw.R;
+import org.smartregister.chw.vmmc.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +30,9 @@ public class BaseVmmcRegisterProviderTest {
     @Mock
     public View.OnClickListener listener;
     @Mock
-    public BaseVmmcRegisterProvider.RegisterViewHolder viewHolder;
+    public VmmcRegisterProvider.RegisterViewHolder viewHolder;
     @Mock
-    private BaseVmmcRegisterProvider testRegisterProvider;
+    private VmmcRegisterProvider testRegisterProvider;
 
     @Before
     public void setUp() {
@@ -77,7 +78,7 @@ public class BaseVmmcRegisterProviderTest {
     public void isAncClosed() throws Exception {
         Resources resources = Mockito.mock(Resources.class);
         Activity activity = Mockito.mock(Activity.class);
-        BaseVmmcRegisterProvider provider = Mockito.spy(new BaseVmmcRegisterProvider(activity, listener, listener, null));
+        VmmcRegisterProvider provider = Mockito.spy(new VmmcRegisterProvider(activity, listener, listener, null));
         Map<String, String> map = new HashMap<>();
         map.put("is_anc_closed", "0");
         Mockito.when(activity.getResources()).thenReturn(resources);
@@ -89,7 +90,7 @@ public class BaseVmmcRegisterProviderTest {
     public void isPncClosed() throws Exception {
         Resources resources = Mockito.mock(Resources.class);
         Activity activity = Mockito.mock(Activity.class);
-        BaseVmmcRegisterProvider provider = Mockito.spy(new BaseVmmcRegisterProvider(activity, listener, listener, null));
+        VmmcRegisterProvider provider = Mockito.spy(new VmmcRegisterProvider(activity, listener, listener, null));
         Map<String, String> map = new HashMap<>();
         map.put("is_pnc_closed", "0");
         Mockito.when(activity.getResources()).thenReturn(resources);
@@ -101,7 +102,7 @@ public class BaseVmmcRegisterProviderTest {
     public void updateMemberGender() throws Exception {
         Activity activity = Mockito.mock(Activity.class);
         Resources resources = Mockito.mock(Resources.class);
-        BaseVmmcRegisterProvider provider = new BaseVmmcRegisterProvider(activity, listener, listener, null);
+        VmmcRegisterProvider provider = new VmmcRegisterProvider(activity, listener, listener, null);
         Map<String, String> map = new HashMap<>();
         map.put(DBConstants.KEY.GENDER, "Male");
 

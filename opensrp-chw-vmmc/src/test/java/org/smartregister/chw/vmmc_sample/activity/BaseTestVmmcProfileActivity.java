@@ -4,48 +4,44 @@ import org.smartregister.chw.vmmc.activity.BaseVmmcProfileActivity;
 import org.smartregister.chw.vmmc.domain.Visit;
 
 public class BaseTestVmmcProfileActivity extends BaseVmmcProfileActivity {
+
     @Override
-    public Visit getLastVisit() {
-        return null;
+    public void startServiceForm() {
+
     }
 
     @Override
-    public boolean getIsClientUsingVmmcMethod() {
-        return false;
+    public void startNotifiableForm() {
+
     }
 
     @Override
-    public boolean isFirstVisit() {
-        return false;
+    public void startFollowUp() {
+
     }
 
     @Override
-    public void startPointOfServiceDeliveryForm() {
-        //not required
+    public void startProcedure() {
+
     }
 
     @Override
-    public void startVmmcCounselingForm() {
-        //not required
+    public void startDischarge() {
+
     }
 
     @Override
-    public void startVmmcScreeningForm() {
-        //not required
+    public void continueService() {
+
     }
 
     @Override
-    public void startProvideVmmcMethod() {
-        //not required
+    public void continueProcedure() {
+
     }
 
     @Override
-    public void startProvideOtherServices() {
-        //not required
-    }
+    public void continueDischarge() {
 
-    @Override
-    public void startVmmcFollowupVisit() {
-        //not required
     }
 }

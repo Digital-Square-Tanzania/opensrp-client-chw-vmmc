@@ -14,6 +14,8 @@ import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.chw.vmmc.domain.MemberObject;
+import org.smartregister.chw.vmmc.fragment.BaseVmmcCallDialogFragment;
 
 @PrepareForTest(BaseVmmcCallDialogFragment.class)
 public class BaseVmmcCallDialogFragmentTest {
@@ -27,7 +29,7 @@ public class BaseVmmcCallDialogFragmentTest {
     public View view;
 
     @Mock
-    public VmmcMemberObject vmmcMemberObject;
+    public MemberObject vmmcMemberObject;
 
     @Before
     public void setUp() {

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.chw.vmmc.activity.BaseVmmcRegisterActivity;
 
 public class BaseVmmcRegisterActivityTest {
     @Mock

@@ -18,7 +18,7 @@ plugins {
 description = 'OpenSRP CHW VMMC library'
 
 jacoco {
-    toolVersion = "0.8.0"
+    toolVersion = "0.8.5"
 }
 
 android {
