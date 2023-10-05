@@ -9,6 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.chw.vmmc.contract.VmmcRegisterContract;
+import org.smartregister.chw.vmmc.presenter.BaseVmmcRegisterPresenter;
 
 @PrepareForTest(BaseVmmcRegisterPresenter.class)
 public class BaseVmmcRegisterPresenterTest {
@@ -16,11 +18,11 @@ public class BaseVmmcRegisterPresenterTest {
     protected BaseVmmcRegisterPresenter baseVmmcRegisterPresenter;
 
     @Mock
-    protected BaseVmmcRegisterContract.Interactor interactor;
+    protected VmmcRegisterContract.Interactor interactor;
     @Mock
-    protected BaseVmmcRegisterContract.Model model;
+    protected VmmcRegisterContract.Model model;
     @Mock
-    protected BaseVmmcRegisterContract.View baseView;
+    protected VmmcRegisterContract.View baseView;
     private BaseVmmcRegisterPresenter presenter;
 
     @Before

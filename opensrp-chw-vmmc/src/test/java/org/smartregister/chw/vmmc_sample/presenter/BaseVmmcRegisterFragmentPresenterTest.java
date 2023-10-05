@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.smartregister.chw.vmmc.contract.VmmcRegisterFragmentContract;
 import org.smartregister.chw.vmmc.presenter.BaseVmmcRegisterFragmentPresenter;
 import org.smartregister.chw.vmmc.util.Constants;
 import org.smartregister.chw.vmmc.util.DBConstants;
@@ -16,10 +17,10 @@ import java.util.TreeSet;
 
 public class BaseVmmcRegisterFragmentPresenterTest {
     @Mock
-    protected BaseVmmcRegisterFragmentContract.View view;
+    protected VmmcRegisterFragmentContract.View view;
 
     @Mock
-    protected BaseVmmcRegisterFragmentContract.Model model;
+    protected VmmcRegisterFragmentContract.Model model;
 
     private BaseVmmcRegisterFragmentPresenter baseVmmcRegisterFragmentPresenter;
 
@@ -37,30 +38,30 @@ public class BaseVmmcRegisterFragmentPresenterTest {
 
     @Test
     public void getMainCondition() {
-        Assert.assertEquals("", baseVmmcRegisterFragmentPresenter.getMainCondition());
+        Assert.assertEquals(" ec_vmmc_enrollment.is_closed = 0 ", baseVmmcRegisterFragmentPresenter.getMainCondition());
     }
 
     @Test
     public void getDueFilterCondition() {
-        Assert.assertEquals(" (cast( julianday(STRFTIME('%Y-%m-%d', datetime('now'))) -  julianday(IFNULL(SUBSTR(malaria_test_date,7,4)|| '-' || SUBSTR(malaria_test_date,4,2) || '-' || SUBSTR(malaria_test_date,1,2),'')) as integer) between 7 and 14) ", baseVmmcRegisterFragmentPresenter.getDueFilterCondition());
+        Assert.assertEquals(" (cast( julianday(STRFTIME('%Y-%m-%d', datetime('now'))) -  julianday(IFNULL(SUBSTR(vmmc_test_date,7,4)|| '-' || SUBSTR(vmmc_test_date,4,2) || '-' || SUBSTR(vmmc_test_date,1,2),'')) as integer) between 7 and 14) ", baseVmmcRegisterFragmentPresenter.getDueFilterCondition());
     }
 
     @Test
     public void getDefaultSortQuery() {
-        Assert.assertEquals(VmmcConstants.TABLES.VMMC_REGISTER + "." + DBConstants.KEY.LAST_INTERACTED_WITH + " DESC ", baseVmmcRegisterFragmentPresenter.getDefaultSortQuery());
+        Assert.assertEquals(Constants.TABLES.VMMC_ENROLLMENT + "." + DBConstants.KEY.LAST_INTERACTED_WITH + " DESC ", baseVmmcRegisterFragmentPresenter.getDefaultSortQuery());
     }
 
     @Test
     public void getMainTable() {
-        Assert.assertEquals(VmmcConstants.TABLES.VMMC_REGISTER, baseVmmcRegisterFragmentPresenter.getMainTable());
+        Assert.assertEquals(Constants.TABLES.VMMC_ENROLLMENT, baseVmmcRegisterFragmentPresenter.getMainTable());
     }
 
     @Test
     public void initializeQueries() {
         Set<View> visibleColumns = new TreeSet<>();
         baseVmmcRegisterFragmentPresenter.initializeQueries(null);
-        Mockito.doNothing().when(view).initializeQueryParams("ec_malaria_confirmation", null, null);
-        Mockito.verify(view).initializeQueryParams("ec_malaria_confirmation", null, null);
+        Mockito.doNothing().when(view).initializeQueryParams(Constants.TABLES.VMMC_ENROLLMENT, null, null);
+        Mockito.verify(view).initializeQueryParams(Constants.TABLES.VMMC_ENROLLMENT, null, null);
         Mockito.verify(view).initializeAdapter(visibleColumns);
         Mockito.verify(view).countExecute();
         Mockito.verify(view).filterandSortInInitializeQueries();

@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.smartregister.chw.vmmc.dao.VmmcDao;
 import org.smartregister.repository.Repository;
 
 @RunWith(MockitoJUnitRunner.class)

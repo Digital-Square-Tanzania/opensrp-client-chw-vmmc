@@ -20,7 +20,9 @@ import timber.log.Timber;
 public class VmmcFirstVitalActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     protected static String time_taken;
+
     protected String jsonPayload;
+
     private HashMap<String, Boolean> checkObject = new HashMap<>();
 
     @Override

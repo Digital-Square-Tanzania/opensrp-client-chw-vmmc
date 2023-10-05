@@ -86,11 +86,11 @@ public class BaseVmmcVisitPresenter implements BaseVmmcVisitContract.Presenter, 
     }
 
     @Override
-    public void onSubmitted(boolean successful) {
+    public void onSubmitted(String results) {
         if (view.get() != null) {
             view.get().displayProgressBar(false);
-            if (successful) {
-                view.get().submittedAndClose();
+            if (results != null) {
+                view.get().submittedAndClose(results);
             } else {
                 view.get().displayToast(view.get().getContext().getString(R.string.error_unable_save_visit));
             }

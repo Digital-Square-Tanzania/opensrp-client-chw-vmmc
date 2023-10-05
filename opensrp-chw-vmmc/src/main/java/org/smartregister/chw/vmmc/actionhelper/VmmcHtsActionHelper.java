@@ -5,6 +5,8 @@ import android.content.Context;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,9 +30,6 @@ public class VmmcHtsActionHelper implements BaseVmmcVisitAction.VmmcVisitActionH
 
     private HashMap<String, Boolean> checkObject = new HashMap<>();
 
-    protected Integer age;
-
-
     protected Context context;
 
     protected MemberObject memberObject;
@@ -52,8 +51,8 @@ public class VmmcHtsActionHelper implements BaseVmmcVisitAction.VmmcVisitActionH
             JSONObject jsonObject = new JSONObject(jsonPayload);
             JSONObject global = jsonObject.getJSONObject("global");
 
-            age = memberObject.getVisitAge();
-
+            int age = new Period(new DateTime(memberObject.getAge()),
+                    new DateTime()).getYears();
 
             JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
 

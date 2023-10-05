@@ -92,12 +92,6 @@ public class BaseVmmcVisitInteractor implements BaseVmmcVisitContract.Interactor
      */
     @Override
     public MemberObject getMemberClient(String memberID, String profileType) {
-        if (profileType.equalsIgnoreCase(Constants.PROFILE_TYPES.VMMC_PROFILE)) {
-            return VmmcDao.getVmmcMember(memberID);
-        }
-        if (profileType.equalsIgnoreCase(Constants.PROFILE_TYPES.VMMC_PROFILE)) {
-            return VmmcDao.getVmmcMember(memberID);
-        }
         return VmmcDao.getMember(memberID);
     }
 
@@ -157,22 +151,26 @@ public class BaseVmmcVisitInteractor implements BaseVmmcVisitContract.Interactor
     @Override
     public void submitVisit(final boolean editMode, final String memberID, final Map<String, BaseVmmcVisitAction> map, final BaseVmmcVisitContract.InteractorCallBack callBack) {
         final Runnable runnable = () -> {
-            boolean result = true;
+            String results = null;
             try {
-                submitVisit(editMode, memberID, map, "");
+                results = submitVisit(editMode, memberID, map, "");
             } catch (Exception e) {
                 Timber.e(e);
-                result = false;
             }
 
-            final boolean finalResult = result;
-            appExecutors.mainThread().execute(() -> callBack.onSubmitted(finalResult));
+            String finalResults = results;
+            appExecutors.mainThread().execute(() ->
+                    callBack.onSubmitted(finalResults));
         };
 
         appExecutors.diskIO().execute(runnable);
     }
 
-    protected void submitVisit(final boolean editMode, final String memberID, final Map<String, BaseVmmcVisitAction> map, String parentEventType) throws Exception {
+    protected String submitVisit(final boolean editMode,
+                                 final String memberID,
+                                 final Map<String,
+                                 BaseVmmcVisitAction> map,
+                                 String parentEventType) throws Exception {
         // create a map of the different types
 
         Map<String, BaseVmmcVisitAction> externalVisits = new HashMap<>();
@@ -218,6 +216,7 @@ public class BaseVmmcVisitInteractor implements BaseVmmcVisitContract.Interactor
             Context context = VmmcLibrary.getInstance().context().applicationContext();
 
         }
+        return visit.getJson();
     }
 
     /**
