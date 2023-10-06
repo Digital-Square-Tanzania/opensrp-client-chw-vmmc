@@ -37,7 +37,6 @@ import org.smartregister.chw.vmmc.util.VmmcVisitsUtil;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.helper.ImageRenderHelper;
 import org.smartregister.view.activity.BaseProfileActivity;
-import org.smartregister.chw.vmmc.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
