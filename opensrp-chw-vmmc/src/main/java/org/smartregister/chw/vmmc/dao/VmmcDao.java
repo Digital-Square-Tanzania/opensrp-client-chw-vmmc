@@ -34,10 +34,10 @@ public class VmmcDao extends AbstractDao {
         memberObject.setBaseEntityId(getCursorValue(cursor, "base_entity_id", ""));
         memberObject.setFamilyHead(getCursorValue(cursor, "family_head", ""));
         memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "pcg_phone_number", ""));
-        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor,
-                "family_head_phone_number",
+        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "family_head_phone_number", ""));
+        memberObject.setEnrollmentDate(getCursorValue(cursor,
+                "enrollment_date",
                 ""));
-        memberObject.setEnrollmentDate(getCursorValue(cursor, "enrollment_date", ""));
 
         String familyHeadName = getCursorValue(cursor, "family_head_first_name", "") + " "
                 + getCursorValue(cursor, "family_head_middle_name", "");
