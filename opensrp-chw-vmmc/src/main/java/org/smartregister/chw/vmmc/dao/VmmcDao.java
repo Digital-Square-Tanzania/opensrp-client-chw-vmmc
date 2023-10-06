@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class VmmcDao extends AbstractDao {
-    private static final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    private static final SimpleDateFormat df = new SimpleDateFormat(
+            "dd-MM-yyyy",
+            Locale.getDefault()
+    );
 
     private static final DataMap<MemberObject> memberObjectMap = cursor -> {
 
@@ -31,7 +34,9 @@ public class VmmcDao extends AbstractDao {
         memberObject.setBaseEntityId(getCursorValue(cursor, "base_entity_id", ""));
         memberObject.setFamilyHead(getCursorValue(cursor, "family_head", ""));
         memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "pcg_phone_number", ""));
-        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor, "family_head_phone_number", ""));
+        memberObject.setFamilyHeadPhoneNumber(getCursorValue(cursor,
+                "family_head_phone_number",
+                ""));
         memberObject.setEnrollmentDate(getCursorValue(cursor, "enrollment_date", ""));
 
         String familyHeadName = getCursorValue(cursor, "family_head_first_name", "") + " "

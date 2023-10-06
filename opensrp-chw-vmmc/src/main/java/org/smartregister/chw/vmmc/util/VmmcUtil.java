@@ -135,20 +135,30 @@ public class VmmcUtil {
         return "";
     }
 
-    protected static Event getCloseVmmcEvent(String jsonString, String baseEntityId) {
-        Event closeVmmcEvent = new Gson().fromJson(jsonString, Event.class);
+    protected static Event getCloseVmmcEvent(String jsonString,
+                                             String baseEntityId) {
+
+        Event closeVmmcEvent = new Gson().
+                fromJson(jsonString, Event.class);
 
         closeVmmcEvent.setEntityType(Constants.TABLES.VMMC_ENROLLMENT);
         closeVmmcEvent.setEventType(Constants.EVENT_TYPE.CLOSE_VMMC_SERVICE);
         closeVmmcEvent.setBaseEntityId(baseEntityId);
-        closeVmmcEvent.setFormSubmissionId(JsonFormUtils.generateRandomUUIDString());
+        closeVmmcEvent.setFormSubmissionId(JsonFormUtils.
+                generateRandomUUIDString());
         closeVmmcEvent.setEventDate(new Date());
         return closeVmmcEvent;
     }
 
     public static void closeVmmcService(String baseEntityId) {
-        AllSharedPreferences allSharedPreferences = VmmcLibrary.getInstance().context().allSharedPreferences();
-        Event closeVmmcEvent = getCloseVmmcEvent(new JSONObject().toString(), baseEntityId);
+        AllSharedPreferences allSharedPreferences = VmmcLibrary.
+                getInstance().
+                context().
+                allSharedPreferences();
+        Event closeVmmcEvent = getCloseVmmcEvent(new JSONObject().
+                toString(),
+                baseEntityId);
+
         try {
             NCUtils.addEvent(allSharedPreferences, closeVmmcEvent);
             NCUtils.startClientProcessing();
