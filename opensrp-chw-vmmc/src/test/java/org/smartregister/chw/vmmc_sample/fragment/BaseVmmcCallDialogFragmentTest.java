@@ -93,7 +93,7 @@ public class BaseVmmcCallDialogFragmentTest {
         Mockito.when(viewGroup.findViewById(view.getId())).thenReturn(textView);
 
         Whitebox.invokeMethod(baseTestCallDialogFragment, "setCallTitle", viewGroup, view.getId(), "message");
-        Assert.assertEquals("message Malaria Client", textView.getText());
+        Assert.assertEquals("message Vmmc Client", textView.getText());
     }
 
     @Test(expected = Exception.class)
