@@ -37,10 +37,10 @@ public class VmmcSecondVitalActionHelper implements BaseVmmcVisitAction.VmmcVisi
             JSONObject jsonObject = new JSONObject(jsonPayload);
             JSONObject global = jsonObject.getJSONObject("global");
 
-            // String first_vital_sign_time_taken = "14:00";
             String first_vital_sign_time_taken = VmmcFirstVitalActionHelper.time_taken;
 
             DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
+
             LocalTime currentTime = LocalTime.parse(first_vital_sign_time_taken);
             LocalTime newTime = currentTime.plusMinutes(15);
             String newTimeString = newTime.toString(formatter);
