@@ -22,22 +22,6 @@ public class BaseVmmcCallWidgetDialogListener implements View.OnClickListener {
         int i = v.getId();
         if (i == R.id.vmmc_call_close) {
             callDialogFragment.dismiss();
-        } else if (i == R.id.vmmc_call_head_phone) {
-            try {
-                String phoneNumber = (String) v.getTag();
-                VmmcUtil.launchDialer(callDialogFragment.getActivity(), callDialogFragment, phoneNumber);
-                callDialogFragment.dismiss();
-            } catch (Exception e) {
-                Timber.e(e);
-            }
-        } else if (i == R.id.call_vmmc_client_phone) {
-            try {
-                String phoneNumber = (String) v.getTag();
-                VmmcUtil.launchDialer(callDialogFragment.getActivity(), callDialogFragment, phoneNumber);
-                callDialogFragment.dismiss();
-            } catch (Exception e) {
-                Timber.e(e);
-            }
         }
     }
 }

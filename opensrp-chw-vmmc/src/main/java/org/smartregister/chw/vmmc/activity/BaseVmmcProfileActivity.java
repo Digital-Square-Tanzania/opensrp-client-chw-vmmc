@@ -305,7 +305,8 @@ public abstract class BaseVmmcProfileActivity
                 if (getNotifiableVisit() != null) {
                     VmmcVisitsUtil.manualProcessVisit(getNotifiableVisit());
                 }
-                processVmmcDischarge();
+                displayToast(R.string.vmmc_visit_conducted);
+                // processVmmcDischarge();
             }
 
         } catch (Exception e) {
