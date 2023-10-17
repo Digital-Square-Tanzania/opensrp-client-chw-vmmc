@@ -2,8 +2,6 @@ package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
 
-import com.vijay.jsonwizard.constants.JsonFormConstants;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,16 +20,12 @@ import timber.log.Timber;
 
 public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
-    protected String medical_history;
-
     public static String method_used;
-
+    protected String medical_history;
     protected String jsonPayload;
-
-    private HashMap<String, Boolean> checkObject = new HashMap<>();
-
     protected Context context;
     protected MemberObject memberObject;
+    private HashMap<String, Boolean> checkObject = new HashMap<>();
 
 
     public VmmcProcedureActionHelper(Context context, MemberObject memberObject) {

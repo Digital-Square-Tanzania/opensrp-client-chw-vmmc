@@ -38,10 +38,17 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+
             JSONObject global = jsonObject.getJSONObject("global");
-            String method_used_notify = VmmcDao.getMcMethodUsed(memberObject.getBaseEntityId());
-            String discharge_date = VmmcDao.getDischargingDate(memberObject.getBaseEntityId());
+
+            String method_used_notify = VmmcDao.
+                    getMcMethodUsed(memberObject.getBaseEntityId());
+
+            String discharge_date = VmmcDao.
+                    getDischargingDate(memberObject.getBaseEntityId());
+
             global.put("method_used", method_used_notify);
+
             global.put("discharge_date", discharge_date);
 
             return jsonObject.toString();
@@ -57,7 +64,8 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
 
-            was_nae_attended = JsonFormUtils.getValue(jsonObject, "was_nae_attended");
+            was_nae_attended = JsonFormUtils.
+                    getValue(jsonObject, "was_nae_attended");
 
         } catch (JSONException e) {
             e.printStackTrace();
