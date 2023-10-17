@@ -21,12 +21,16 @@ import timber.log.Timber;
 public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     public static String method_used;
-    protected String medical_history;
-    protected String jsonPayload;
-    protected Context context;
-    protected MemberObject memberObject;
-    private HashMap<String, Boolean> checkObject = new HashMap<>();
 
+    protected String medical_history;
+
+    protected String jsonPayload;
+
+    protected Context context;
+
+    protected MemberObject memberObject;
+
+    private HashMap<String, Boolean> checkObject = new HashMap<>();
 
     public VmmcProcedureActionHelper(Context context, MemberObject memberObject) {
         this.context = context;
