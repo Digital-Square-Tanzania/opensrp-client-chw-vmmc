@@ -135,6 +135,7 @@ public class BaseVmmcServiceVisitInteractor extends BaseVmmcVisitInteractor {
         public String postProcess(String s) {
             if (StringUtils.isNotBlank(medical_history)) {
                 try {
+                    evaluateVmmcPhysicalExam(details);
                     evaluateVmmcHTS(details);
                 } catch (BaseVmmcVisitAction.ValidationException e) {
                     e.printStackTrace();

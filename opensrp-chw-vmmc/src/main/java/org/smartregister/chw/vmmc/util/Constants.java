@@ -12,6 +12,7 @@ public interface Constants {
     interface JSON_FORM_EXTRA {
         String JSON = "json";
         String ENCOUNTER_TYPE = "encounter_type";
+        String EVENT_TYPE = "eventType";
     }
 
     interface EVENT_TYPE {
@@ -22,6 +23,7 @@ public interface Constants {
         String VMMC_FOLLOW_UP_VISIT = "Vmmc Follow-up Visit";
         String VMMC_NOTIFIABLE_EVENTS = "VMMC Notifiable Adverse Events";
         String VOID_EVENT = "Void Event";
+        String CLOSE_VMMC_SERVICE = "Close Vmmc Service";
 
     }
 

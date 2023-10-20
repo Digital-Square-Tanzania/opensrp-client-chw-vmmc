@@ -67,6 +67,7 @@
     <string name="not_visiting_this_month">Not visiting this month</string>
     <string name="undo">UNDO</string>
     <string name="call_family_head">Head of Family</string>
+    <string name="no_phone_number">No Phone Number</string>
     <string name="call_primary_caregiver">Primary Caregiver</string>
     <string name="call_anc_client">ANC Client</string>
     <string name="call_pnc_client">PNC Client</string>
@@ -80,5 +81,6 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="return_to_vmmc_clients">Return to VMMC Clients</string>
+    <string name="number_not_filled">client phone number, not filled</string>
 
 </resources>

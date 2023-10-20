@@ -40,14 +40,12 @@ public class MemberObject implements Serializable {
     private String familyBaseEntityId;
     private String familyName;
     private String phoneNumber;
-    private String gestAge;
-    private String deliveryDate;
-    private String ancMember;
-    private String pncMember;
     private String vmmcFollowUpDate;
+    private String enrollmentDate;
 
     public MemberObject() {
     }
+
     public String getFirstName() {
         return firstName;
     }
@@ -68,16 +66,20 @@ public class MemberObject implements Serializable {
         return lastName;
     }
 
-    public String getFullName() {
-        return Utils.getName(getFirstName(), getLastName());
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return Utils.getName(getFirstName(), getLastName());
+    }
+
     public String getAge() {
         return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
     }
 
     public int getVisitAge() {
@@ -86,10 +88,6 @@ public class MemberObject implements Serializable {
 
     public void setDob(String dob) {
         this.dob = dob;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
     }
 
     public String getAddress() {
@@ -268,22 +266,6 @@ public class MemberObject implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getGestAge() {
-        return gestAge;
-    }
-
-    public void setGestAge(String gestAge) {
-        this.gestAge = gestAge;
-    }
-
-    public String getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public void setDeliveryDate(String deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
 
     public String getFamilyHeadName() {
         return familyHeadName;
@@ -317,27 +299,19 @@ public class MemberObject implements Serializable {
         this.primaryCareGiverPhone = primaryCareGiverPhone;
     }
 
-    public String getAncMember() {
-        return ancMember;
-    }
-
-    public void setAncMember(String ancMember) {
-        this.ancMember = ancMember;
-    }
-
-    public String getPncMember() {
-        return pncMember;
-    }
-
-    public void setPncMember(String pncMember) {
-        this.pncMember = pncMember;
-    }
-
     public String getVmmcFollowUpDate() {
         return vmmcFollowUpDate;
     }
 
     public void setVmmcFollowUpDate(String vmmcFollowUpDate) {
         this.vmmcFollowUpDate = vmmcFollowUpDate;
+    }
+
+    public String getEnrollmentDate() {
+        return enrollmentDate;
+    }
+
+    public void setEnrollmentDate(String enrollmentDate) {
+        this.enrollmentDate = enrollmentDate;
     }
 }

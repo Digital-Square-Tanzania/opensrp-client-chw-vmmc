@@ -68,10 +68,8 @@ public class BaseVmmcCallDialogFragment extends DialogFragment implements BaseVm
 
     private void setCallTitle(ViewGroup rootView, int viewId, final String message) {
         TextView callTitle = rootView.findViewById(viewId);
-        if (MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getFamilyHead())) {
-            callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_family_head)));
-        } else if (MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getPrimaryCareGiver())) {
-            callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_primary_caregiver)));
+        if (MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getPrimaryCareGiver())) {
+            callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_vmmc_client)));
         } else {
             callTitle.setText(String.format("%s %s", message, getResources().getString(R.string.call_vmmc_client)));
         }
@@ -84,27 +82,10 @@ public class BaseVmmcCallDialogFragment extends DialogFragment implements BaseVm
                 TextView familyHeadName = rootView.findViewById(R.id.vmmc_call_head_name);
                 familyHeadName.setText(MEMBER_OBJECT.getFamilyHeadName());
                 TextView clientCallHeadPhone = rootView.findViewById(R.id.vmmc_call_head_phone);
-                clientCallHeadPhone.setTag(MEMBER_OBJECT.getPhoneNumber());
                 clientCallHeadPhone.setText(
                         getName(getCurrentContext().getString(R.string.call), MEMBER_OBJECT.getFamilyHeadPhoneNumber()));
                 clientCallHeadPhone.setOnClickListener(listener);
 
-            } else {
-                rootView.findViewById(R.id.vmmc_layout_family_head).setVisibility(GONE);
-            }
-
-            if (!MEMBER_OBJECT.getBaseEntityId().equals(MEMBER_OBJECT.getFamilyHead())) {
-                //just a member
-                TextView vmmcClientNameTextView = rootView.findViewById(R.id.call_vmmc_client_name);
-                vmmcClientNameTextView.setText(String.format("%s %s %s", MEMBER_OBJECT.getFirstName(), MEMBER_OBJECT.getMiddleName(), MEMBER_OBJECT.getLastName()));
-
-                setCallTitle(rootView, R.id.call_vmmc_client_title, "");
-                TextView callVmmcClientPhone = rootView.findViewById(R.id.call_vmmc_client_phone);
-                callVmmcClientPhone.setTag(MEMBER_OBJECT.getPhoneNumber());
-                callVmmcClientPhone.setText(getName(getCurrentContext().getString(R.string.call), MEMBER_OBJECT.getPhoneNumber()));
-                callVmmcClientPhone.setOnClickListener(listener);
-            } else {
-                rootView.findViewById(R.id.layout_vmmc_client).setVisibility(GONE);
             }
         }
 

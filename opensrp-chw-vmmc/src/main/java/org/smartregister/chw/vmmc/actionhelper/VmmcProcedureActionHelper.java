@@ -20,17 +20,17 @@ import timber.log.Timber;
 
 public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
-    protected String medical_history;
-
     public static String method_used;
+
+    protected String medical_history;
 
     protected String jsonPayload;
 
-    private HashMap<String, Boolean> checkObject = new HashMap<>();
-
     protected Context context;
+
     protected MemberObject memberObject;
 
+    private HashMap<String, Boolean> checkObject = new HashMap<>();
 
     public VmmcProcedureActionHelper(Context context, MemberObject memberObject) {
         this.context = context;
@@ -64,7 +64,6 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
             checkObject.put("is_male_procedure_circumcision_conducted", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "is_male_procedure_circumcision_conducted")));
             checkObject.put("start_time", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "start_time")));
             checkObject.put("end_time", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "end_time")));
-            checkObject.put("aneathesia_administered", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "aneathesia_administered")));
             checkObject.put("male_circumcision_method", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "male_circumcision_method")));
             checkObject.put("intraoperative_adverse_event_occured", StringUtils.isNotBlank(JsonFormUtils.getValue(jsonObject, "intraoperative_adverse_event_occured")));
 

@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class VmmcDischargeActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
-    protected String medical_history;
+    protected String discharge_condition;
 
     protected String notifiable_adverse_event_occured;
 
@@ -41,9 +41,8 @@ public class VmmcDischargeActionHelper implements BaseVmmcVisitAction.VmmcVisitA
     public void onPayloadReceived(String jsonPayload) {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
-            medical_history = JsonFormUtils.getValue(jsonObject, "discharge_condition");
+            discharge_condition = JsonFormUtils.getValue(jsonObject, "discharge_condition");
             notifiable_adverse_event_occured = JsonFormUtils.getValue(jsonObject, "notifiable_adverse_event_occured");
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,7 +71,7 @@ public class VmmcDischargeActionHelper implements BaseVmmcVisitAction.VmmcVisitA
 
     @Override
     public BaseVmmcVisitAction.Status evaluateStatusOnPayload() {
-        if (StringUtils.isBlank(medical_history))
+        if (StringUtils.isBlank(discharge_condition))
             return BaseVmmcVisitAction.Status.PENDING;
         else {
             return BaseVmmcVisitAction.Status.COMPLETED;

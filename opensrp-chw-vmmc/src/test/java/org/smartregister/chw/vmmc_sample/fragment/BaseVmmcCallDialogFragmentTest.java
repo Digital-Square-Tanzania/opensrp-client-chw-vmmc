@@ -54,8 +54,6 @@ public class BaseVmmcCallDialogFragmentTest {
     public void setCallTitleAnc() throws Exception {
         TextView textView = Mockito.mock(TextView.class);
 
-        Mockito.when(vmmcMemberObject.getAncMember()).thenReturn("0");
-
         Mockito.when(viewGroup.findViewById(view.getId())).thenReturn(textView);
 
         Whitebox.invokeMethod(baseTestCallDialogFragment, "setCallTitle", viewGroup, view.getId(), "message");
@@ -79,8 +77,6 @@ public class BaseVmmcCallDialogFragmentTest {
     public void setCallTitlePnc() throws Exception {
         TextView textView = Mockito.mock(TextView.class);
 
-        Mockito.when(vmmcMemberObject.getPncMember()).thenReturn("0");
-
         Mockito.when(viewGroup.findViewById(view.getId())).thenReturn(textView);
 
         Whitebox.invokeMethod(baseTestCallDialogFragment, "setCallTitle", viewGroup, view.getId(), "message");
@@ -97,7 +93,7 @@ public class BaseVmmcCallDialogFragmentTest {
         Mockito.when(viewGroup.findViewById(view.getId())).thenReturn(textView);
 
         Whitebox.invokeMethod(baseTestCallDialogFragment, "setCallTitle", viewGroup, view.getId(), "message");
-        Assert.assertEquals("message Malaria Client", textView.getText());
+        Assert.assertEquals("message Vmmc Client", textView.getText());
     }
 
     @Test(expected = Exception.class)

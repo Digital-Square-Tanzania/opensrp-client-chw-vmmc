@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
-    protected String was_adverse_events_notifiable;
+    protected String was_nae_attended;
 
     protected String jsonPayload;
 
@@ -38,9 +38,18 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+
             JSONObject global = jsonObject.getJSONObject("global");
-            String method_used_notify = VmmcDao.getMcMethodUsed(memberObject.getBaseEntityId());
+
+            String method_used_notify = VmmcDao.
+                    getMcMethodUsed(memberObject.getBaseEntityId());
+
+            String discharge_date = VmmcDao.
+                    getDischargingDate(memberObject.getBaseEntityId());
+
             global.put("method_used", method_used_notify);
+
+            global.put("discharge_date", discharge_date);
 
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -55,7 +64,9 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
 
-            was_adverse_events_notifiable = JsonFormUtils.getValue(jsonObject, "did_client_experience_nae");
+            was_nae_attended = JsonFormUtils.
+                    getValue(jsonObject, "was_nae_attended");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -83,7 +94,7 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
 
     @Override
     public BaseVmmcVisitAction.Status evaluateStatusOnPayload() {
-        if (StringUtils.isBlank(was_adverse_events_notifiable))
+        if (StringUtils.isBlank(was_nae_attended))
             return BaseVmmcVisitAction.Status.PENDING;
         else {
             return BaseVmmcVisitAction.Status.COMPLETED;

@@ -124,9 +124,8 @@ public class BaseVmmcVisitProcedureInteractor extends BaseVmmcVisitInteractor {
                 } catch (BaseVmmcVisitAction.ValidationException e) {
                     e.printStackTrace();
                 }
-            } else {
-                actionList.remove(context.getString(R.string.vmmc_mc_procedure));
             }
+
             new AppExecutors().mainThread().execute(() -> callBack.preloadActions(actionList));
             return super.postProcess(s);
         }

@@ -37,7 +37,6 @@ import org.smartregister.chw.vmmc.util.VmmcVisitsUtil;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.helper.ImageRenderHelper;
 import org.smartregister.view.activity.BaseProfileActivity;
-import org.smartregister.chw.vmmc.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -306,7 +305,8 @@ public abstract class BaseVmmcProfileActivity
                 if (getNotifiableVisit() != null) {
                     VmmcVisitsUtil.manualProcessVisit(getNotifiableVisit());
                 }
-                processVmmcDischarge();
+                displayToast(R.string.vmmc_visit_conducted);
+                // processVmmcDischarge();
             }
 
         } catch (Exception e) {

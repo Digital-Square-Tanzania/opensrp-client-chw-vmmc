@@ -53,6 +53,14 @@ public class VmmcPhysicalExamActionHelper implements BaseVmmcVisitAction.VmmcVis
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+
+            JSONObject global = jsonObject.getJSONObject("global");
+
+            String known_allergies = VmmcMedicalHistoryActionHelper
+                    .known_allergies;
+
+            global.put("known_allergies", known_allergies);
+
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -74,7 +82,6 @@ public class VmmcPhysicalExamActionHelper implements BaseVmmcVisitAction.VmmcVis
             systolic = JsonFormUtils.getValue(jsonObject, "systolic");
 
             medical_history = JsonFormUtils.getValue(jsonObject, "physical_abnormality");
-
 
             checkObject.clear();
 

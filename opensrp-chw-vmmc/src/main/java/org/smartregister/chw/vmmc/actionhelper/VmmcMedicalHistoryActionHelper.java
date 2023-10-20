@@ -21,16 +21,27 @@ import timber.log.Timber;
 public class VmmcMedicalHistoryActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     protected static String is_client_diagnosed_with_any;
+
     protected static String any_complaints;
+
     protected static String complications_previous_surgical;
+
     protected static String any_hematological_disease_symptoms;
+
     protected static String known_allergies;
+
     protected static String type_of_blood_for_glucose_test;
+
     protected static String blood_for_glucose;
+
     protected static String blood_for_glucose_test;
+
     protected static String client_diagnosed_other;
+
     protected String jsonPayload;
+
     protected String medical_history;
+
     protected String baseEntityId;
 
     protected Context context;
