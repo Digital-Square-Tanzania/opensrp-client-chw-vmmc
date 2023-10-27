@@ -198,6 +198,19 @@ public class VmmcDao extends AbstractDao {
         return "";
     }
 
+    public static String getHivStatusSixMonthAgo(String baseEntityId) {
+        String sql = "SELECT diagnosed_with_hiv_six_month_ago FROM ec_vmmc_services p " +
+                " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "diagnosed_with_hiv_six_month_ago");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
     public static String getTypeForBloodGlucoseTest(String baseEntityId) {
         String sql = "SELECT type_of_blood_for_glucose_test FROM ec_vmmc_services p " +
                 " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";

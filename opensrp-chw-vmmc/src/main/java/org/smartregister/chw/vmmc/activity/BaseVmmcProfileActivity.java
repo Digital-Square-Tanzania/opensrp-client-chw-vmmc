@@ -363,6 +363,7 @@ public abstract class BaseVmmcProfileActivity
             rlLastVisit.setVisibility(View.VISIBLE);
             findViewById(R.id.family_vmmc_head).setVisibility(View.GONE);
         } else {
+            rlLastVisit.setVisibility(View.VISIBLE);
             findViewById(R.id.family_vmmc_head).setVisibility(View.VISIBLE);
         }
     }
@@ -379,15 +380,16 @@ public abstract class BaseVmmcProfileActivity
         String bloodGlucoseTest = VmmcDao.getBloodGlucoseTest(memberObject.getBaseEntityId());
         String systolic = VmmcDao.getSystolic(memberObject.getBaseEntityId());
         String diastolic = VmmcDao.getDiastolic(memberObject.getBaseEntityId());
+        String isHivStatusSixMonthAgo = VmmcDao.getHivStatusSixMonthAgo(memberObject.getBaseEntityId());
 
         boolean isGentialExaminationValid = gentialExaminationValue.equalsIgnoreCase(Constants.VALUES.NONE) || gentialExaminationValue.contains(Constants.VALUES.CHORDAE);
 
-        boolean isHivValid = (diagnosedValue.contains(Constants.VALUES.HIV) && Integer.parseInt(viralLoad) < 1000) || diagnosedValue.equalsIgnoreCase(Constants.VALUES.NONE) || !diagnosedValue.contains(Constants.VALUES.HIV);
+        boolean isHivValid = (isHivStatusSixMonthAgo.contains(Constants.VALUES.YES) && Integer.parseInt(viralLoad) < 1000) || diagnosedValue.equalsIgnoreCase(Constants.VALUES.NONE) || !diagnosedValue.contains(Constants.VALUES.HIV);
 
         boolean isDiabetesValid = ((typeForBloodGlucoseTest.equalsIgnoreCase(Constants.VALUES.RBG) &&
-                Integer.parseInt(bloodGlucoseTest) < 11.1) ||
+                Double.parseDouble(bloodGlucoseTest) < 11.0 && Double.parseDouble(bloodGlucoseTest) > 4.0) ||
                 (typeForBloodGlucoseTest.equalsIgnoreCase(Constants.VALUES.FBG) &&
-                        (Integer.parseInt(bloodGlucoseTest) < 5.9 || Integer.parseInt(bloodGlucoseTest) > 3.9)) ||
+                        (Double.parseDouble(bloodGlucoseTest) < 5.9 || Double.parseDouble(bloodGlucoseTest) > 3.9)) ||
                 typeForBloodGlucoseTest.isEmpty());
 
         boolean isHypetensionValid = (diagnosedValue.contains(Constants.VALUES.HYPERTENSION) &&

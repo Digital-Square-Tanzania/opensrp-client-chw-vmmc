@@ -4,8 +4,6 @@ import android.content.Context;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,9 +20,8 @@ import timber.log.Timber;
 
 public class VmmcSecondVitalActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
-    private HashMap<String, Boolean> checkObject = new HashMap<>();
-
     protected String jsonPayload;
+    private HashMap<String, Boolean> checkObject = new HashMap<>();
 
     @Override
     public void onJsonFormLoaded(String jsonPayload, Context context, Map<String, List<VisitDetail>> map) {
@@ -39,11 +36,9 @@ public class VmmcSecondVitalActionHelper implements BaseVmmcVisitAction.VmmcVisi
 
             String first_vital_sign_time_taken = VmmcFirstVitalActionHelper.time_taken;
 
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
-
             LocalTime currentTime = LocalTime.parse(first_vital_sign_time_taken);
             LocalTime newTime = currentTime.plusMinutes(15);
-            String newTimeString = newTime.toString(formatter);
+            String newTimeString = newTime.toString();
 
             global.put("first_vital_sign_time_taken_value", newTimeString);
 
