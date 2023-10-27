@@ -21,6 +21,7 @@ import timber.log.Timber;
 public class VmmcSecondVitalActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     protected String jsonPayload;
+
     private HashMap<String, Boolean> checkObject = new HashMap<>();
 
     @Override
