@@ -405,7 +405,8 @@ public abstract class BaseVmmcProfileActivity
 
         return !isGentialExaminationValid || !isHivValid || !isDiabetesValid ||
                 !isAllergiesValid || !isHIVTestResultValid ||
-                !isHematologicalDiseaseValid || !isComplaintsValid || !isBloodPressureValid;
+                !isHematologicalDiseaseValid || !isComplaintsValid ||
+                !isBloodPressureValid;
     }
 
     protected MemberObject getMemberObject(String baseEntityId) {
