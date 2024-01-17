@@ -109,8 +109,8 @@ publishing {
                  ** gpr.usr=GITHUB_USER_ID & gpr.key=PERSONAL_ACCESS_TOKEN
                  ** Set env variable GPR_debugdebugUSER & GPR_API_KEY if not adding a properties file**/
 
-                username = githubProperties['gpr.usr'] ?: System.getenv("GITHIB_ACTOR")
-                password = githubProperties['gpr.key'] ?: System.getenv("GITHUB_TOKEN")
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
             }
         }
     }
