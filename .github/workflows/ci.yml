@@ -1,34 +1,34 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
 name: Android CI with Gradle
 
 on:
   push:
-    branches: [ master, main]
+    branches: [ master , main]
   pull_request:
-    branches: [ master, main]
+    branches: [ master , main ]
 
 jobs:
-  build:
+  unit_tests:
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v2
-      - name: set up JDK 1.8
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Print Java version
-        run: java -version
       - name: Install NDK
-        run: echo "y" | sudo -S -p "" ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+        run: echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run unit tests with Gradle
-        run: ./gradlew opensrp-chw-vmmc:clean opensrp-chw-vmmc:jacocoTestReport --stacktrace -Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"
-      - name: Generate Javadoc with Gradle
-        run: ./gradlew javadoc
+        run: ./gradlew :opensrp-chw:clean :opensrp-chw:jacocoTestReport  --stacktrace
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Upload coverage to Coveralls with Gradle
-        run: ./gradlew opensrp-chw-vmmc:coveralls --stacktrace
+        run: ./gradlew coveralls --stacktrace
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
