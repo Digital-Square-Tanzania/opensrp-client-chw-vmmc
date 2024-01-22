@@ -21,7 +21,7 @@ jobs:
       - name: Print Java version
         run: java -version
       - name: Install NDK
-        run: echo "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" | sudo -S ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+        run: echo 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 | sudo -S ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run unit tests with Gradle
