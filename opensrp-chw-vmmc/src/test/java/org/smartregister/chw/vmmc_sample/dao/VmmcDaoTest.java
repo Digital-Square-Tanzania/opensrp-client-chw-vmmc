@@ -77,5 +77,95 @@ public class VmmcDaoTest extends VmmcDao {
         Mockito.verify(database).rawQuery(Mockito.contains("SELECT any_complaints FROM ec_vmmc_services p  WHERE p.entity_id = '56789' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
         Assert.assertNotNull(result);
     }
+
+    @Test
+    public void testGetDiagnosed() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getDiagnosed("67890");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT is_client_diagnosed_with_any FROM ec_vmmc_services p  WHERE p.entity_id = '67890' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetAnyComplicationsPreviousSurgicalProcedure() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getAnyComplicationsPreviousSurgicalProcedure("78901");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT type_complication FROM ec_vmmc_services p  WHERE p.entity_id = '78901' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetSymptomsHematologicalDiseaseValue() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getSymptomsHematologicalDiseaseValue("89012");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT any_hematological_disease_symptoms FROM ec_vmmc_services p  WHERE p.entity_id = '89012' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetKnownAllergiesValue() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getKnownAllergiesValue("90123");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT known_allergies FROM ec_vmmc_services p  WHERE p.entity_id = '90123' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetHivTestResult() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getHivTestResult("01234");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT hiv_result FROM ec_vmmc_services p  WHERE p.entity_id = '01234' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetViralLoad() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getViralLoad("12345");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT hiv_viral_load_text FROM ec_vmmc_services p  WHERE p.entity_id = '12345' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetTypeForBloodGlucoseTest() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getTypeForBloodGlucoseTest("34567");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT type_of_blood_for_glucose_test FROM ec_vmmc_services p  WHERE p.entity_id = '34567' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetBloodGlucoseTest() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getBloodGlucoseTest("45678");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT blood_for_glucose FROM ec_vmmc_services p  WHERE p.entity_id = '45678' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetDischargeCondition() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getDischargeCondition("56789");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT discharge_condition FROM ec_vmmc_post_op_and_discharge p  WHERE p.entity_id = '56789' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetMcConducted() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        String result = VmmcDao.getMcConducted("67890");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT is_male_procedure_circumcision_conducted FROM ec_vmmc_procedure p  WHERE p.entity_id = '67890' ORDER BY last_interacted_with DESC LIMIT 1"), Mockito.any());
+        Assert.assertNotNull(result);
+    }
+
+
+    @Test
+    public void testGetVisitNumber() {
+        Mockito.doReturn(database).when(repository).getReadableDatabase();
+        int result = VmmcDao.getVisitNumber("89012");
+        Mockito.verify(database).rawQuery(Mockito.contains("SELECT visit_number  FROM ec_vmmc_follow_up_visit WHERE entity_id='89012' ORDER BY visit_number DESC LIMIT 1"), Mockito.any());
+        Assert.assertEquals(0, result);
+    }
+
 }
 
