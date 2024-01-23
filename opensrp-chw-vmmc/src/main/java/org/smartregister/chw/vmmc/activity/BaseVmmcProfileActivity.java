@@ -392,10 +392,6 @@ public abstract class BaseVmmcProfileActivity
                         (Double.parseDouble(bloodGlucoseTest) < 5.9 || Double.parseDouble(bloodGlucoseTest) > 3.9)) ||
                 typeForBloodGlucoseTest.isEmpty());
 
-        boolean isHypetensionValid = (diagnosedValue.contains(Constants.VALUES.HYPERTENSION) &&
-                Integer.parseInt(systolic) < 140 && Integer.parseInt(diastolic) < 90 &&
-                Integer.parseInt(systolic) > 90 && Integer.parseInt(diastolic) > 60) || diagnosedValue.equalsIgnoreCase(Constants.VALUES.NONE) || !diagnosedValue.contains(Constants.VALUES.HYPERTENSION);
-
         boolean isAllergiesValid = knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.NONE) || knownAllergiesValue.equalsIgnoreCase(Constants.VALUES.SILICON_OR_LEXAN);
 
         boolean isHIVTestResultValid = hivTestResultValue.equalsIgnoreCase(Constants.VALUES.NEGATIVE) || hivTestResultValue.isEmpty();
@@ -404,12 +400,13 @@ public abstract class BaseVmmcProfileActivity
 
         boolean isComplaintsValid = anyComplaintsValue.equalsIgnoreCase(Constants.VALUES.NONE);
 
-        boolean isBloodPressureValid = (Integer.parseInt(systolic) < 140 && Integer.parseInt(diastolic) < 90) &&
-                (Integer.parseInt(systolic) > 90 && Integer.parseInt(diastolic) > 60);
+        boolean isBloodPressureValid = (Integer.parseInt(systolic) <= 140 && Integer.parseInt(diastolic) <= 90) &&
+                (Integer.parseInt(systolic) >= 90 && Integer.parseInt(diastolic) >= 60);
 
-        return !isGentialExaminationValid || !isHivValid || !isDiabetesValid || !isHypetensionValid ||
+        return !isGentialExaminationValid || !isHivValid || !isDiabetesValid ||
                 !isAllergiesValid || !isHIVTestResultValid ||
-                !isHematologicalDiseaseValid || !isComplaintsValid || !isBloodPressureValid;
+                !isHematologicalDiseaseValid || !isComplaintsValid ||
+                !isBloodPressureValid;
     }
 
     protected MemberObject getMemberObject(String baseEntityId) {
