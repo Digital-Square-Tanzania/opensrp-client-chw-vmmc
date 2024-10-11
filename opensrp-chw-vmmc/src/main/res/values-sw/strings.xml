@@ -18,6 +18,7 @@
     <string name="return_to_previous_page">Rudi kwenye wateja wote wa vmmc</string>
     <string name="last_visit_40_days_ago">Tembeleo la mwisho %1$s uliyopita</string>
     <string name="view_medical_history">Angalia historia ya huduma</string>
+    <string name="preview_client_info">Taarifa za mteja</string>
     <string name="call_no_number_provided">(Hakuna namba iliyotolewa)</string>
     <string name="view_upcoming_services">Angalia huduma zinazokaribia</string>
     <string name="family_has_nothing_due">Muda wa huduma kwenye kaya haujafika</string>

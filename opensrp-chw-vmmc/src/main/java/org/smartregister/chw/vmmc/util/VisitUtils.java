@@ -101,9 +101,6 @@ public class VisitUtils {
                 AllSharedPreferences allSharedPreferences = VmmcLibrary.getInstance().context().allSharedPreferences();
                 NCUtils.addEvent(allSharedPreferences, baseEvent);
 
-                // process details
-                //   processVisitDetails(visitGroupId, v, visitDetailsRepository, v.getVisitId(), v.getBaseEntityId(), baseEvent.getFormSubmissionId());
-
                 visitRepository.completeProcessing(v.getVisitId());
             }
         }

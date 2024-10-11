@@ -1,11 +1,18 @@
 package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.chw.vmmc.dao.VmmcDao;
 import org.smartregister.chw.vmmc.domain.MemberObject;
 import org.smartregister.chw.vmmc.domain.VisitDetail;
 import org.smartregister.chw.vmmc.model.BaseVmmcVisitAction;
@@ -16,11 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.text.SimpleDateFormat;
+
 import timber.log.Timber;
 
 public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
     public static String method_used;
+
+    public static String male_circumcision_conducted;
 
     protected String medical_history;
 
@@ -46,6 +57,17 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+            JSONObject global = jsonObject.getJSONObject("global");
+            global.put("client_weight", VmmcDao.getClientWeight(memberObject.getBaseEntityId()));
+            global.put("preferred_client_mc_method", VmmcDao.getMethodPreffered(memberObject.getBaseEntityId()));
+
+//            LocalTime currentTime = LocalTime.now();
+//            DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
+
+            JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
+            JSONObject nowTime = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "now_time");
+            nowTime.put(JsonFormUtils.VALUE, new SimpleDateFormat("HH:mm").format(System.currentTimeMillis()));
+
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -69,8 +91,10 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
 
 
             method_used = JsonFormUtils.getValue(jsonObject, "male_circumcision_method");
-
+            male_circumcision_conducted = JsonFormUtils.getValue(jsonObject, "is_male_procedure_circumcision_conducted");
             medical_history = JsonFormUtils.getValue(jsonObject, "is_male_procedure_circumcision_conducted");
+
+            Timber.tag("circumcision_conducted").d(male_circumcision_conducted);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -94,7 +118,12 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
             JSONArray fields = JsonFormUtils.fields(jsonObject);
             JSONObject mcProcedureCompletionStatus = JsonFormUtils.getFieldJSONObject(fields, "mc_procedure_completion_status");
             assert mcProcedureCompletionStatus != null;
-            mcProcedureCompletionStatus.put(com.vijay.jsonwizard.constants.JsonFormConstants.VALUE, VisitUtils.getActionStatus(checkObject));
+
+            if (male_circumcision_conducted.equalsIgnoreCase("no")) {
+                mcProcedureCompletionStatus.put(com.vijay.jsonwizard.constants.JsonFormConstants.VALUE, "complete");
+            } else {
+                mcProcedureCompletionStatus.put(com.vijay.jsonwizard.constants.JsonFormConstants.VALUE, VisitUtils.getActionStatus(checkObject));
+            }
         } catch (JSONException e) {
             Timber.e(e);
         }
@@ -112,7 +141,15 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
 
     @Override
     public BaseVmmcVisitAction.Status evaluateStatusOnPayload() {
-        String status = VisitUtils.getActionStatus(checkObject);
+        String status;
+
+        if (StringUtils.isBlank(male_circumcision_conducted)) {
+            return BaseVmmcVisitAction.Status.PENDING;
+        } else if (male_circumcision_conducted.equalsIgnoreCase("no")) {
+            status = "complete";
+        } else {
+            status = VisitUtils.getActionStatus(checkObject);
+        }
 
         if (status.equalsIgnoreCase(VisitUtils.Complete)) {
             return BaseVmmcVisitAction.Status.COMPLETED;

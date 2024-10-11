@@ -1,11 +1,18 @@
 package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.Minutes;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.chw.vmmc.dao.VmmcDao;
+import org.smartregister.chw.vmmc.domain.MemberObject;
 import org.smartregister.chw.vmmc.domain.VisitDetail;
 import org.smartregister.chw.vmmc.model.BaseVmmcVisitAction;
 import org.smartregister.chw.vmmc.util.JsonFormUtils;
@@ -25,6 +32,15 @@ public class VmmcFirstVitalActionHelper implements BaseVmmcVisitAction.VmmcVisit
 
     private HashMap<String, Boolean> checkObject = new HashMap<>();
 
+    protected Context context;
+
+    protected MemberObject memberObject;
+
+    public VmmcFirstVitalActionHelper(Context context, MemberObject memberObject) {
+        this.context = context;
+        this.memberObject = memberObject;
+    }
+
     @Override
     public void onJsonFormLoaded(String jsonPayload, Context context, Map<String, List<VisitDetail>> map) {
         this.jsonPayload = jsonPayload;
@@ -34,6 +50,29 @@ public class VmmcFirstVitalActionHelper implements BaseVmmcVisitAction.VmmcVisit
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+            JSONObject global = jsonObject.getJSONObject("global");
+
+            int age = new Period(new DateTime(memberObject.getAge()),
+                    new DateTime()).getYears();
+
+            LocalTime currentTime = LocalTime.now();
+
+            String mc_done_time = VmmcDao.
+                    getMcDoneTime(memberObject.getBaseEntityId());
+            LocalTime mc_time = LocalTime.parse(mc_done_time);
+
+            JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
+            JSONObject secondVitalSign = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "mc_time");
+            secondVitalSign.put(JsonFormUtils.VALUE, mc_time);
+
+
+            int minutesDifference = Minutes.minutesBetween(mc_time, currentTime).getMinutes();
+
+            global.put("duration", minutesDifference);
+
+            global.put("age", age);
+//            global.put("mc_time", mc_time);
+
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
