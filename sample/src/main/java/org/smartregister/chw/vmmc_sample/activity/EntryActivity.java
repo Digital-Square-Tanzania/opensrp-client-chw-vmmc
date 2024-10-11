@@ -44,6 +44,7 @@ public class EntryActivity extends SecuredActivity implements View.OnClickListen
             vmmcMemberObject.setLastName("Juma");
             vmmcMemberObject.setMiddleName("Ali");
             vmmcMemberObject.setGender("Female");
+            vmmcMemberObject.setMartialStatus("Married");
             vmmcMemberObject.setDob("1982-01-18T03:00:00.000+03:00");
             vmmcMemberObject.setUniqueId("3503504");
             vmmcMemberObject.setBaseEntityId("3503504");

@@ -1,8 +1,11 @@
 package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,13 +56,17 @@ public class VmmcPhysicalExamActionHelper implements BaseVmmcVisitAction.VmmcVis
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
-
             JSONObject global = jsonObject.getJSONObject("global");
+
+            int age = new Period(new DateTime(memberObject.getAge()),
+                    new DateTime()).getYears();
 
             String known_allergies = VmmcMedicalHistoryActionHelper
                     .known_allergies;
 
             global.put("known_allergies", known_allergies);
+            global.put("age", age);
+            Timber.tag("AGE mtu").d(String.valueOf(age));
 
             return jsonObject.toString();
         } catch (JSONException e) {

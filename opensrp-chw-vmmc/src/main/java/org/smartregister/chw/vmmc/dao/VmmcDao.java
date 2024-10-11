@@ -23,6 +23,7 @@ public class VmmcDao extends AbstractDao {
         memberObject.setLastName(getCursorValue(cursor, "last_name", ""));
         memberObject.setAddress(getCursorValue(cursor, "village_town"));
         memberObject.setGender(getCursorValue(cursor, "gender"));
+        memberObject.setMartialStatus(getCursorValue(cursor, "marital_status"));
         memberObject.setUniqueId(getCursorValue(cursor, "unique_id", ""));
         memberObject.setAge(getCursorValue(cursor, "dob"));
         memberObject.setFamilyBaseEntityId(getCursorValue(cursor, "relational_id", ""));
@@ -66,6 +67,58 @@ public class VmmcDao extends AbstractDao {
             return null;
 
         return res.get(0);
+    }
+
+    public static String getClientVmmcID(String baseEntityId) {
+        String sql = "SELECT vmmc_client_id FROM ec_vmmc_enrollment p " +
+                " WHERE p.base_entity_id = '" + baseEntityId + "' ORDER BY enrollment_date DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "vmmc_client_id");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
+    public static String getReferredFrom(String baseEntityId) {
+        String sql = "SELECT reffered_from FROM ec_vmmc_enrollment p " +
+                " WHERE p.base_entity_id = '" + baseEntityId + "' ORDER BY enrollment_date DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "reffered_from");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
+    public static String getReferredFromOthers(String baseEntityId) {
+        String sql = "SELECT reffered_from_others FROM ec_vmmc_enrollment p " +
+                " WHERE p.base_entity_id = '" + baseEntityId + "' ORDER BY enrollment_date DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "reffered_from_others");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
+    public static String getEnrollmentDate(String baseEntityId) {
+        String sql = "SELECT enrollment_date FROM ec_vmmc_enrollment p " +
+                " WHERE p.base_entity_id = '" + baseEntityId + "' ORDER BY enrollment_date DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "enrollment_date");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
     }
 
     public static String getGentialExamination(String baseEntityId) {
@@ -262,6 +315,31 @@ public class VmmcDao extends AbstractDao {
         }
         return "";
     }
+    public static String getClientWeight(String baseEntityId) {
+        String sql = "SELECT client_weight FROM ec_vmmc_services p " +
+                " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "client_weight");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
+    public static String getMethodPreffered(String baseEntityId) {
+        String sql = "SELECT preferred_client_mc_method FROM ec_vmmc_services p " +
+                " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "preferred_client_mc_method");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
 
     public static Date getVmmcFollowUpVisitDate(String baseEntityID) {
         String sql = "SELECT eventDate FROM event where eventType ='Vmmc Follow-up Visit' AND baseEntityId ='" + baseEntityID + "'";
@@ -312,6 +390,32 @@ public class VmmcDao extends AbstractDao {
         return "";
     }
 
+    public static String getMcDoneTime(String baseEntityId) {
+        String sql = "SELECT end_time FROM ec_vmmc_procedure p " +
+                " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "end_time");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
+    public static String getSecVitalTime(String baseEntityId) {
+        String sql = "SELECT second_vital_sign_time_taken FROM ec_vmmc_post_op_and_discharge p " +
+                " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
+
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "second_vital_sign_time_taken");
+
+        List<String> res = readData(sql, dataMap);
+        if (res != null && res.size() != 0 && res.get(0) != null) {
+            return res.get(0);
+        }
+        return "";
+    }
+
     public static String getDischargingDate(String baseEntityId) {
         String sql = "SELECT discharge_date FROM ec_vmmc_post_op_and_discharge p " +
                 " WHERE p.entity_id = '" + baseEntityId + "' ORDER BY last_interacted_with DESC LIMIT 1";
@@ -339,10 +443,6 @@ public class VmmcDao extends AbstractDao {
     }
 
     public static boolean isRegisteredForVmmc(String baseEntityID) {
-//        String sql = "SELECT count(p.base_entity_id) count FROM ec_vmmc_enrollment p " +
-//                "WHERE p.base_entity_id = '" + baseEntityID + "' AND p.is_closed = 0 AND p.vmmc  = 1 " +
-//                "AND datetime('NOW') <= datetime(p.last_interacted_with/1000, 'unixepoch', 'localtime','+15 days')";
-
         String sql = "SELECT count(p.base_entity_id) count FROM ec_vmmc_enrollment p " +
                 "WHERE p.base_entity_id = '" + baseEntityID + "' AND p.is_closed = 0 ";
 
@@ -379,6 +479,7 @@ public class VmmcDao extends AbstractDao {
                 "m.middle_name , " +
                 "m.last_name , " +
                 "m.gender , " +
+                "m.marital_status , " +
                 "m.phone_number , " +
                 "m.other_phone_number , " +
                 "f.first_name as family_name ," +
@@ -417,6 +518,7 @@ public class VmmcDao extends AbstractDao {
                 "m.middle_name , " +
                 "m.last_name , " +
                 "m.gender , " +
+                "m.marital_status , " +
                 "m.phone_number , " +
                 "m.other_phone_number , " +
                 "f.first_name as family_name ," +

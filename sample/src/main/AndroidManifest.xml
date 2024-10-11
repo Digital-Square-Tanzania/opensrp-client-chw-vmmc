@@ -14,7 +14,8 @@
         tools:replace="android:theme">
         <activity
             android:name="org.smartregister.chw.vmmc_sample.activity.EntryActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

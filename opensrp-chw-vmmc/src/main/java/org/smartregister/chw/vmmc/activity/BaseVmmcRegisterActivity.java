@@ -166,7 +166,6 @@ public class BaseVmmcRegisterActivity extends BaseRegisterActivity implements Vm
                 JSONObject form = new JSONObject(jsonString);
                 JSONArray fieldsOne = VmmcJsonFormUtils.fields(form, Constants.STEP_ONE);
                 updateFormField(fieldsOne, DBConstants.KEY.RELATIONAL_ID, FAMILY_BASE_ENTITY_ID);
-//                process vmmc form
                 presenter().saveForm(form.toString());
             } catch (JSONException e) {
                 Timber.e(e);

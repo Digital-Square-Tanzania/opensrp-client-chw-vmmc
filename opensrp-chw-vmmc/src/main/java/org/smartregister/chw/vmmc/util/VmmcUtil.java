@@ -105,7 +105,6 @@ public class VmmcUtil {
                 copyToClipboardDialog.setContent(phoneNumber);
                 copyToClipboardDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 copyToClipboardDialog.show();
-                // no phone
                 Toast.makeText(activity, activity.getText(R.string.copied_phone_number), Toast.LENGTH_SHORT).show();
 
             } else {

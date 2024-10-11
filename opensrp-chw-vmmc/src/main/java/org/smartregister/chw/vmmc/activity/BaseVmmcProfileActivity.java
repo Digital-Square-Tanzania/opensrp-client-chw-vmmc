@@ -2,12 +2,16 @@ package org.smartregister.chw.vmmc.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -74,6 +78,7 @@ public abstract class BaseVmmcProfileActivity
     protected View view_family_row;
     protected View view_positive_date_row;
     protected RelativeLayout rlLastVisit;
+    protected RelativeLayout rlClientInfo;
     protected RelativeLayout rlUpcomingServices;
     protected RelativeLayout rlFamilyServicesDue;
     protected RelativeLayout visitStatus;
@@ -136,6 +141,7 @@ public abstract class BaseVmmcProfileActivity
         tvFamilyStatus = findViewById(R.id.textview_family_has);
         textview_positive_date = findViewById(R.id.textview_positive_date);
         rlLastVisit = findViewById(R.id.rlLastVisit);
+        rlClientInfo = findViewById(R.id.rlClientInfo);
         rlUpcomingServices = findViewById(R.id.rlUpcomingServices);
         rlFamilyServicesDue = findViewById(R.id.rlFamilyServicesDue);
         rlVmmcPositiveDate = findViewById(R.id.rlVmmcPositiveDate);
@@ -165,6 +171,7 @@ public abstract class BaseVmmcProfileActivity
         textViewRecordAncNotDone.setOnClickListener(this);
         textViewVisitDoneEdit.setOnClickListener(this);
         rlLastVisit.setOnClickListener(this);
+        rlClientInfo.setOnClickListener(this);
         rlUpcomingServices.setOnClickListener(this);
         rlFamilyServicesDue.setOnClickListener(this);
         rlVmmcPositiveDate.setOnClickListener(this);
@@ -306,7 +313,6 @@ public abstract class BaseVmmcProfileActivity
                     VmmcVisitsUtil.manualProcessVisit(getNotifiableVisit());
                 }
                 displayToast(R.string.vmmc_visit_conducted);
-                // processVmmcDischarge();
             }
 
         } catch (Exception e) {
@@ -382,6 +388,9 @@ public abstract class BaseVmmcProfileActivity
         String diastolic = VmmcDao.getDiastolic(memberObject.getBaseEntityId());
         String isHivStatusSixMonthAgo = VmmcDao.getHivStatusSixMonthAgo(memberObject.getBaseEntityId());
 
+        int age = new Period(new DateTime(memberObject.getAge()),
+                new DateTime()).getYears();
+
         boolean isGentialExaminationValid = gentialExaminationValue.equalsIgnoreCase(Constants.VALUES.NONE) || gentialExaminationValue.contains(Constants.VALUES.CHORDAE);
 
         boolean isHivValid = (isHivStatusSixMonthAgo.contains(Constants.VALUES.YES) && Integer.parseInt(viralLoad) < 1000) || diagnosedValue.equalsIgnoreCase(Constants.VALUES.NONE) || !diagnosedValue.contains(Constants.VALUES.HIV);
@@ -400,8 +409,8 @@ public abstract class BaseVmmcProfileActivity
 
         boolean isComplaintsValid = anyComplaintsValue.equalsIgnoreCase(Constants.VALUES.NONE);
 
-        boolean isBloodPressureValid = (Integer.parseInt(systolic) <= 140 && Integer.parseInt(diastolic) <= 90) &&
-                (Integer.parseInt(systolic) >= 90 && Integer.parseInt(diastolic) >= 60);
+        boolean isBloodPressureValid = age <= 15 || ((Integer.parseInt(systolic) <= 140 && Integer.parseInt(diastolic) <= 90) &&
+                (Integer.parseInt(systolic) >= 90 && Integer.parseInt(diastolic) >= 60));
 
         return !isGentialExaminationValid || !isHivValid || !isDiabetesValid ||
                 !isAllergiesValid || !isHIVTestResultValid ||
@@ -420,6 +429,8 @@ public abstract class BaseVmmcProfileActivity
             onBackPressed();
         } else if (id == R.id.rlLastVisit) {
             this.openMedicalHistory();
+        } else if (id == R.id.rlClientInfo) {
+            this.openClientInfo();
         } else if (id == R.id.rlUpcomingServices) {
             this.openUpcomingService();
         } else if (id == R.id.rlFamilyServicesDue) {
@@ -561,6 +572,63 @@ public abstract class BaseVmmcProfileActivity
     @Override
     public void openMedicalHistory() {
         //implement
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void openClientInfo() {
+        // Show custom dialog
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog_layout);
+
+        // Set the dialog's width to match the parent
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+
+        // Find the TextViews and set their values
+        TextView clientIdTextView = dialog.findViewById(R.id.client_id_value);
+        TextView phoneTextView = dialog.findViewById(R.id.phone_value);
+        TextView martialStatusTextView = dialog.findViewById(R.id.martial_status_value);
+        TextView reffredFromTextView = dialog.findViewById(R.id.reffred_from_value);
+        TextView enrollDateTextView = dialog.findViewById(R.id.enroll_date_value);
+
+        clientIdTextView.setText(VmmcDao.getClientVmmcID(memberObject.getBaseEntityId()));  // Set the Client ID
+        phoneTextView.setText(memberObject.getPhoneNumber());  // Set the Phone Number
+        martialStatusTextView.setText(memberObject.getMartialStatus());  // Set the Martial Status
+
+        if(VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("self_referral")){
+            reffredFromTextView.setText("Self-referral");  // Set the Client ID
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("chw")){
+            reffredFromTextView.setText("CHW");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("opd")){
+            reffredFromTextView.setText("OPD");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("ipd")){
+            reffredFromTextView.setText("IPD");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("hts")){
+            reffredFromTextView.setText("HTS");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("rchs")){
+            reffredFromTextView.setText("RCHS");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("radio")){
+            reffredFromTextView.setText("Radio");
+        } else if (VmmcDao.getReferredFrom(memberObject.getBaseEntityId()).equalsIgnoreCase("others")){
+            reffredFromTextView.setText(VmmcDao.getReferredFromOthers(memberObject.getBaseEntityId()));
+        }
+        else {
+            reffredFromTextView.setText("Others");
+        }
+
+        enrollDateTextView.setText(VmmcDao.getEnrollmentDate(memberObject.getBaseEntityId()));  // Set the Client ID
+
+        Button closeButton = dialog.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     @Override

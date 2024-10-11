@@ -15,6 +15,8 @@ public interface VmmcProfileContract {
 
         void openMedicalHistory();
 
+        void openClientInfo();
+
         void openUpcomingService();
 
         void openFamilyDueServices();

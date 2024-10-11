@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Client ID -->
+    <TextView
+        android:id="@+id/client_id_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Client ID:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/client_id_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3232422424" />
+
+    <!-- Phone Number -->
+    <TextView
+        android:id="@+id/phone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Phone:"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/phone_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0789123311"
+        />
+
+    <!-- Martial Status -->
+    <TextView
+        android:id="@+id/martial_status_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Martial Status:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/martial_status_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Married" />
+
+    <!-- Referred From -->
+    <TextView
+        android:id="@+id/reffred_from_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Referred From:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/reffred_from_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Married" />
+
+    <!-- Enrollment Date -->
+    <TextView
+        android:id="@+id/enroll_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Enrollment Date:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/enroll_date_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Married" />
+
+    <!-- Close Button -->
+    <Button
+        android:id="@+id/close_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_marginTop="24dp" />
+</LinearLayout>

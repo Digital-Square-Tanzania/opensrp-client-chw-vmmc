@@ -58,7 +58,6 @@ public class VmmcVisitsUtil extends VisitUtils {
     private static void createCancelledEvent(String json) throws Exception {
         Event baseEvent = new Gson().fromJson(json, Event.class);
         baseEvent.setFormSubmissionId(UUID.randomUUID().toString());
-//        baseEvent.setEventType(Constants.EVENT_TYPE.PrEP_CLIENT_NOT_ELIGIBLE);
         AllSharedPreferences allSharedPreferences = VmmcLibrary.getInstance().context().allSharedPreferences();
         NCUtils.addEvent(allSharedPreferences, baseEvent);
         NCUtils.startClientProcessing();
@@ -106,12 +105,8 @@ public class VmmcVisitsUtil extends VisitUtils {
             JSONObject checkObj = obs.getJSONObject(0);
             JSONArray value = checkObj.getJSONArray("values");
 
-            if(value.get(0).toString().equalsIgnoreCase("yes")){
-                completionObject.put("isClientConsentForMcProcedureDone", computeCompletionStatus(obs, "client_consent_for_mc_procedure"));
-                completionObject.put("isMcProcedureDone", computeCompletionStatusForAction(obs, "mc_procedure_completion_status"));
-            } else {
-                completionObject.put("isClientConsentForMcProcedureDone", computeCompletionStatus(obs, "client_consent_for_mc_procedure"));
-            }
+            completionObject.put("isClientConsentForMcProcedureDone", computeCompletionStatus(obs, "client_consent_for_mc_procedure"));
+            completionObject.put("isMcProcedureDone", computeCompletionStatusForAction(obs, "mc_procedure_completion_status"));
 
         } catch (Exception e) {
             Timber.e(e);

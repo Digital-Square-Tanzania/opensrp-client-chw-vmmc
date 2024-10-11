@@ -7,7 +7,6 @@ import androidx.annotation.VisibleForTesting;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.chw.vmmc.VmmcLibrary;
-import org.smartregister.chw.vmmc.actionhelper.VmmcFirstVitalActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcNotifiableAdverseActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcPostOpActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcSecondVitalActionHelper;
@@ -93,7 +92,7 @@ public class BaseVmmcVisitDischargeInteractor extends BaseVmmcVisitInteractor {
 
     private void evaluateFirstVitalProcedure(Map<String, List<VisitDetail>> details) throws BaseVmmcVisitAction.ValidationException {
 
-        VmmcFirstVitalActionHelper actionHelper = new VmmcFirstVitalActionHelper();
+        VmmcFirstVitalActionHelper actionHelper = new VmmcFirstVitalActionHelper(mContext, memberObject);
         BaseVmmcVisitAction action = getBuilder(context.getString(R.string.vmmc_first_vital))
                 .withOptional(true)
                 .withDetails(details)
@@ -105,7 +104,7 @@ public class BaseVmmcVisitDischargeInteractor extends BaseVmmcVisitInteractor {
 
     private void evaluateSecondVital(Map<String, List<VisitDetail>> details) throws BaseVmmcVisitAction.ValidationException {
 
-        VmmcSecondVitalActionHelper actionHelper = new VmmcSecondVitalActionHelper();
+        VmmcSecondVitalActionHelper actionHelper = new VmmcSecondVitalActionHelper(mContext, memberObject);
         BaseVmmcVisitAction action = getBuilder(context.getString(R.string.vmmc_second_vital))
                 .withOptional(true)
                 .withDetails(details)
@@ -155,7 +154,7 @@ public class BaseVmmcVisitDischargeInteractor extends BaseVmmcVisitInteractor {
     private class VmmcDischargeActionHelper extends org.smartregister.chw.vmmc.actionhelper.VmmcDischargeActionHelper {
         @Override
         public String postProcess(String s) {
-            if (notifiable_adverse_event_occured.equalsIgnoreCase("yes")) {
+            if (!notifiable_adverse_event_occured.isEmpty() && notifiable_adverse_event_occured.equalsIgnoreCase("yes")) {
                 try {
                     evaluateVmmcNAE(details);
                 } catch (BaseVmmcVisitAction.ValidationException e) {
@@ -171,6 +170,10 @@ public class BaseVmmcVisitDischargeInteractor extends BaseVmmcVisitInteractor {
     }
 
     private class VmmcFirstVitalActionHelper extends org.smartregister.chw.vmmc.actionhelper.VmmcFirstVitalActionHelper {
+
+        public VmmcFirstVitalActionHelper(Context context, MemberObject memberObject) {
+            super(context, memberObject);
+        }
 
         @Override
         public String postProcess(String s) {

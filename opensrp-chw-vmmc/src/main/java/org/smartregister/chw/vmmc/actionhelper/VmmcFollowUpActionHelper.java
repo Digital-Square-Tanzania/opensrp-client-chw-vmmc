@@ -17,6 +17,7 @@ import org.smartregister.chw.vmmc.domain.VisitDetail;
 import org.smartregister.chw.vmmc.model.BaseVmmcVisitAction;
 import org.smartregister.chw.vmmc.util.JsonFormUtils;
 
+import org.joda.time.Days;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,11 +74,21 @@ public class VmmcFollowUpActionHelper implements BaseVmmcVisitAction.VmmcVisitAc
             String male_circumcision_date = VmmcDao.getMcDoneDate(baseEntityId);
             LocalDate mcProcedureDate = formatter.parseDateTime(male_circumcision_date).toLocalDate();
 
+            String male_circumcision_method = VmmcDao.getMcMethodUsed(baseEntityId);
+
             noOfDayPostOP = dayDifference(mcProcedureDate, todayDate);
 
             JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
             JSONObject post_op_dates = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "post_op_dates");
             post_op_dates.put("text", "Day(s) Post-OP: " + noOfDayPostOP.toString());
+
+            int daysBetween = Days.daysBetween(mcProcedureDate,todayDate).getDays();
+
+            JSONObject mcDoneDate = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "no_of_days");
+            mcDoneDate.put(JsonFormUtils.VALUE, daysBetween);
+
+            JSONObject mcMethodUsed = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "male_circumcision_method");
+            mcMethodUsed.put(JsonFormUtils.VALUE, male_circumcision_method);
 
             return jsonObject.toString();
         } catch (JSONException e) {
