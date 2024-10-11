@@ -7,7 +7,6 @@ import androidx.annotation.VisibleForTesting;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.chw.vmmc.VmmcLibrary;
-import org.smartregister.chw.vmmc.actionhelper.VmmcFirstVitalActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcNotifiableAdverseActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcPostOpActionHelper;
 import org.smartregister.chw.vmmc.actionhelper.VmmcSecondVitalActionHelper;

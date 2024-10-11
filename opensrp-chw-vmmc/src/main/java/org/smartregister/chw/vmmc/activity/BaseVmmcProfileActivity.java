@@ -2,14 +2,11 @@ package org.smartregister.chw.vmmc.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;

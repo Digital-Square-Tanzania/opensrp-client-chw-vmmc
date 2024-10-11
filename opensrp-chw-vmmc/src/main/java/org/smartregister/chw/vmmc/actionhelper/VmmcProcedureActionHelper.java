@@ -1,14 +1,10 @@
 package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,9 +116,9 @@ public class VmmcProcedureActionHelper implements BaseVmmcVisitAction.VmmcVisitA
             assert mcProcedureCompletionStatus != null;
 
             if (male_circumcision_conducted.equalsIgnoreCase("no")) {
-                mcProcedureCompletionStatus.put(com.vijay.jsonwizard.constants.JsonFormConstants.VALUE, "complete");
+                mcProcedureCompletionStatus.put(JsonFormConstants.VALUE, "complete");
             } else {
-                mcProcedureCompletionStatus.put(com.vijay.jsonwizard.constants.JsonFormConstants.VALUE, VisitUtils.getActionStatus(checkObject));
+                mcProcedureCompletionStatus.put(JsonFormConstants.VALUE, VisitUtils.getActionStatus(checkObject));
             }
         } catch (JSONException e) {
             Timber.e(e);
