@@ -16,6 +16,7 @@ public class MemberObject implements Serializable {
     private String lastName;
     private String address;
     private String gender;
+    private String martialStatus;
     private String uniqueId;
     private String age;
     private String dob;
@@ -104,6 +105,13 @@ public class MemberObject implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getMartialStatus() {
+        return martialStatus;
+    }
+    public void setMartialStatus(String martialStatus) {
+        this.martialStatus = martialStatus;
     }
 
     public String getUniqueId() {

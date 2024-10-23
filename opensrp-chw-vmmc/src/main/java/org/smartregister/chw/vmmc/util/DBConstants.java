@@ -11,6 +11,7 @@ public class DBConstants {
         public static final String DOB = "dob";
         public static final String DOD = "dod";
         public static final String UNIQUE_ID = "unique_id";
+        public static final String MARITAL_STATUS = "marital_status";
         public static final String LAST_INTERACTED_WITH = "last_interacted_with";
         public static final String VILLAGE_TOWN = "village_town";
         public static final String DATE_REMOVED = "date_removed";

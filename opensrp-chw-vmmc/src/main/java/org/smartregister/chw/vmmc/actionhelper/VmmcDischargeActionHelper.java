@@ -2,15 +2,25 @@ package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalTime;
+import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.chw.vmmc.domain.VisitDetail;
 import org.smartregister.chw.vmmc.model.BaseVmmcVisitAction;
 import org.smartregister.chw.vmmc.util.JsonFormUtils;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class VmmcDischargeActionHelper implements BaseVmmcVisitAction.VmmcVisitActionHelper {
 
@@ -29,6 +39,25 @@ public class VmmcDischargeActionHelper implements BaseVmmcVisitAction.VmmcVisitA
     public String getPreProcessed() {
         try {
             JSONObject jsonObject = new JSONObject(jsonPayload);
+            JSONObject global = jsonObject.getJSONObject("global");
+            JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
+
+            LocalTime currentTime = LocalTime.now();
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
+
+            JSONObject dischargeTime = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "discharge_time");
+            dischargeTime.put("text", "Discharge Time: " + currentTime.toString(formatter));
+
+            String second_vital_time_done = VmmcSecondVitalActionHelper.second_vital_time;
+
+            LocalTime second_vital_time = LocalTime.parse(second_vital_time_done);
+
+//            JSONObject secondVitalSign = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "second_vital_time");
+//            secondVitalSign.put(JsonFormUtils.VALUE, second_vital_time);
+
+            int minutesDifference = Minutes.minutesBetween(second_vital_time, currentTime).getMinutes();
+
+            global.put("duration", minutesDifference);
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();

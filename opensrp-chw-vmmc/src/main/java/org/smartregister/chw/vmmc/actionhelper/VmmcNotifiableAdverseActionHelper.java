@@ -2,7 +2,13 @@ package org.smartregister.chw.vmmc.actionhelper;
 
 import android.content.Context;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.chw.vmmc.dao.VmmcDao;
@@ -50,6 +56,15 @@ public class VmmcNotifiableAdverseActionHelper implements BaseVmmcVisitAction.Vm
             global.put("method_used", method_used_notify);
 
             global.put("discharge_date", discharge_date);
+
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+
+            String male_circumcision_date = VmmcDao.getMcDoneDate(memberObject.getBaseEntityId());
+            LocalDate mcProcedureDate = formatter.parseDateTime(male_circumcision_date).toLocalDate();
+
+            JSONArray fields = jsonObject.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);
+            JSONObject mcDoneDate = org.smartregister.util.JsonFormUtils.getFieldJSONObject(fields, "mc_procedure_date");
+            mcDoneDate.put(JsonFormUtils.VALUE, mcProcedureDate);
 
             return jsonObject.toString();
         } catch (JSONException e) {

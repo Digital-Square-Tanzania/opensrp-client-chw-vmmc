@@ -8,7 +8,6 @@ import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.chw.vmmc.activity.BaseVmmcProfileActivity;
-import org.smartregister.chw.vmmc.dao.VmmcDao;
 import org.smartregister.chw.vmmc.domain.MemberObject;
 import org.smartregister.chw.vmmc.domain.Visit;
 import org.smartregister.chw.vmmc.util.Constants;
@@ -17,6 +16,7 @@ import timber.log.Timber;
 
 
 public class VmmcMemberProfileActivity extends BaseVmmcProfileActivity {
+    private Visit enrollmentVisit = null;
     private Visit serviceVisit = null;
     private Visit procedureVisit = null;
     private Visit dischargeVisit = null;
