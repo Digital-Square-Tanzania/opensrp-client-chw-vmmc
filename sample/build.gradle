@@ -16,6 +16,11 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
 
     }
 
@@ -63,22 +68,55 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
 
 allprojects {
     repositories {
+        def simprintsUser = System.getenv("SIMPRINTS_MAVEN_USERNAME")
+        def simprintsPass = System.getenv("SIMPRINTS_MAVEN_PASSWORD")
+        def simprintsUrl = System.getenv("SIMPRINTS_MAVEN_URL") ?: "https://repo.simprints.com/maven"
+        def githubActor = System.getenv("GITHUB_ACTOR")
+        def githubToken = System.getenv("GITHUB_TOKEN")
+
+        google()
+        jcenter()
+        mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://acra.googlecode.com/svn/repository/releases" }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven { url "https://cloudant.github.io/cloudant-sync-eap/repository" }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        if (simprintsUser && simprintsPass) {
+            maven {
+                url simprintsUrl
+                credentials {
+                    username = simprintsUser
+                    password = simprintsPass
+                }
+            }
+        }
+        if (githubActor && githubToken) {
+            maven {
+                url 'https://maven.pkg.github.com/onaio/CircleProgressbar'
+                credentials {
+                    username = githubActor
+                    password = githubToken
+                }
+            }
+        }
         mavenLocal()
     }
 }
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.11.5-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.18.0-MOH-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
@@ -87,9 +125,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.github.johnkil.print', module: 'print'
         exclude group: 'org.apache.httpcomponents', module: 'httpmime'
+        exclude group: 'org.smartregister', module: 'opensrp-client-simprints'
+        exclude group: 'com.simprints', module: 'libsimprints'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.9.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:3.1.8-NACP-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -102,6 +142,7 @@ dependencies {
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
+    implementation 'net.zetetic:sqlcipher-android:4.5.4'
     implementation project(':opensrp-chw-vmmc')
 
 
@@ -110,10 +151,19 @@ dependencies {
     implementation 'androidx.media:media:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+}
+
+configurations.all {
+    resolutionStrategy.force 'id.zelory:compressor:3.0.1'
+    resolutionStrategy.force 'net.zetetic:sqlcipher-android:4.5.4'
+    resolutionStrategy.force 'androidx.work:work-runtime:2.3.4'
+    resolutionStrategy.force 'androidx.annotation:annotation-experimental:1.0.0'
+    resolutionStrategy.force 'androidx.annotation:annotation:1.1.0'
 }
